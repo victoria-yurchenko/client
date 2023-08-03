@@ -447,6 +447,7 @@ ul, ol {
 
 .shop .shop-body .cta-btn {
   color: #FFF;
+  outline: none;
   text-transform: uppercase;
 }
 
