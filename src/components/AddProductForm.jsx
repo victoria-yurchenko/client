@@ -19,7 +19,7 @@ export default function AddProductForm({ url, data }) {
     const validation = (rule) => {
 
     };
-
+ 
     const handleSelect = (event) => {
         let images = [];
         let imagesB64 = [];
@@ -39,6 +39,7 @@ export default function AddProductForm({ url, data }) {
     };
 
     const handleAddFeature = (event) => {
+        event.preventDefault();
         const input= document.createElement('input');
         event.target.before(input);
     };
@@ -113,18 +114,11 @@ export default function AddProductForm({ url, data }) {
                                 placeholder="Count On Stock"
                                 style={{ marginBottom: '10px' }}
                             />
-                            <a style={{ marginBottom: '10px', cursor: 'pointer' }} 
+                            <button className='btn' style={{ marginBottom: '10px', fontWeight: 600 }} 
                                     onClick={handleAddFeature}>
-                                <i><Icon icon={"fa:plus"} /></i>
-                                <span
-                                    style={{
-                                        marginLeft: '10px',
-                                        fontWeight: 600
-                                    }}
-                                >
-                                    Add Feature
-                                </span>
-                            </a>
+                                <i style={{marginRight:'10px'}}><Icon icon={"fa:plus"} /></i>
+                                Add Feature
+                            </button>
                             <span style={{ marginLeft: '80px' }}>
                                 <label
                                     htmlFor='file-upload'
