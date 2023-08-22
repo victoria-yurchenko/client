@@ -10,7 +10,7 @@ export default function ProductsList() {
     const settings = {
         dots: true,
         infinite: true,
-        speed: 300,
+        speed: 1000,
         slidesToShow: 4, //count depends on screen size
         slidesToScroll: 1,
         autoplay: true,
@@ -54,6 +54,24 @@ export default function ProductsList() {
             productName: 'Fender Stratocaster',
             price: 1200
         },
+        {
+            image: 'https://img.kytary.com/eshop_ie/velky_v2/na/637587725633400000/a86485b6/64867053/jet-guitars-js-300-sfg.jpg',
+            isNew: true,
+            isSale: true,
+            sale: 20,
+            category: 'Guitars',
+            productName: 'Fender Stratocaster',
+            price: 1200
+        },
+        {
+            image: 'https://img.kytary.com/eshop_ie/velky_v2/na/637587725633400000/a86485b6/64867053/jet-guitars-js-300-sfg.jpg',
+            isNew: true,
+            isSale: true,
+            sale: 20,
+            category: 'Guitars',
+            productName: 'Fender Stratocaster',
+            price: 1200
+        }
     ];
 
     return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import CollectionCard from './CollectionCard';
+import CollectionCard from '../../CollectionCard';
 
 export default function Banner() {
 
@@ -34,7 +34,6 @@ export default function Banner() {
                                         imageUrl={item.imageUrl}
                                         productName={item.productName}
                                         catalogueLink={item.catalogueLink}
-
                                     />
                                 </div>
                         )

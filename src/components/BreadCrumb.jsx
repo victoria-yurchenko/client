@@ -1,10 +1,10 @@
 import React from 'react';
 import './../App.css';
 
-export default function BreadCrumb() {
+export default function BreadCrumb({path}) {
     return (
         <div id="breadcrumb" class="section">
-            <div class="container">
+            <div class="container" >
                 <div class="row">
                     <div class="col-md-12">
                         <ul class="breadcrumb-tree">

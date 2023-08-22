@@ -4,8 +4,95 @@ import Slider from 'react-slick';
 import { useState } from 'react';
 import { Icon } from '@iconify/react';
 
-export default function Product() {
+export default function Product({ product }) {
 
+    /*
+    
+isNew, isSale, sale,
+        class Product {
+            id,
+            name,
+            categoryId,
+            price;
+            avatar,
+            isSale,
+            isNew,
+            saleId (may be null)
+            images[]
+            description;
+            options[] key-value pair here
+        }
+
+        class Avatar {
+            id,
+            imageId,
+            imageUrl
+        }
+
+        class Feedback {
+            id,
+            rateId,
+            text
+        }
+
+        class Sale {
+            id,
+            salePercent
+        }
+
+        class Category { enum??
+            id,
+            category
+        }
+
+        class Stock {
+            id,
+            productId,
+            quantityAvailable,
+            inSell
+        }
+
+        class Rate {
+            id,
+            productId,
+            rate, (avg rate)
+        }
+
+        class Image {
+            id,
+            imageUrl,
+            productId
+        }
+
+        Roles {
+            supervisor,
+            admin,
+            user
+        }
+
+        User {
+            id, 
+            email,
+            passwordId,
+            avatar, (imageId here)
+            name,
+            surname,
+            balance,
+            shopList,
+            willingList
+        }
+
+        Password {
+            id, 
+            passwordHash
+        }
+
+
+
+
+
+    
+    */
     // const productImgsRef = useRef(null);
     // const productMainImgRef = useRef(null);
 
@@ -69,7 +156,6 @@ export default function Product() {
         }
         setCurrentState(state);
     }
-
 
     return (
         <div class="section">
