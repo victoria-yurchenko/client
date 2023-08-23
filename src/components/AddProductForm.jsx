@@ -10,6 +10,7 @@ export default function AddProductForm({ url, data }) {
     const [imagesBase64, setImagesBase64] = useState([]);
     const [categories, setCategories] = useState(data.categories);
     const [features, setFeatures] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState([]);
 
     useEffect(() => {
         console.log(imagesBase64);
@@ -103,22 +104,36 @@ export default function AddProductForm({ url, data }) {
         setFeatures(toSend);
     };
 
+    const handleSelectCategory = (event) => {
+        const selected = [...event.target.selectedOptions];
+        let toSend = [];
+        selected.forEach(o => toSend.push(o.innerHTML)); 
+        setSelectedCategories(toSend);
+    };
+
     const handleSubmit = (event) => {
 
         collectFeatures();
 
         let product = {
-            productName: '',
-            category: '',
-            price: 0,
-            salePricePercent: 0,
-            description: '',
-            countOnStock: 0,
-            pictures: [],
-            features: []
+            productName: document.getElementById('feature-name-id').value,
+            categories: selectedCategories,
+            price: document.getElementById('feature-price-id').value,
+            salePricePercent: document.getElementById('feature-sale-percent').value,
+            description: document.getElementById('feature-description-id').value,
+            countOnStock: document.getElementById('feature-stock-count-id').value,
+            pictures: imagesBase64,
+            features: features
         };
 
-        
+        const options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=utf-8' },
+            body: JSON.stringify(product)
+          };
+          fetch(url, options)
+            .then(response => console.log(response))
+            .catch(error => console.log(error));
     };
 
     return (
@@ -136,12 +151,14 @@ export default function AddProductForm({ url, data }) {
                                     className="input"
                                     placeholder="Product Name"
                                     style={{ marginBottom: '10px' }}
+                                    id='feature-name-id'
                                 />
                                 {
                                     data != null
                                         ?
-                                        <Form.Select className='input'
+                                        <Form.Select className='' multiple
                                             style={{ marginBottom: '10px' }}
+                                            onChange={handleSelectCategory}
                                         >
                                             {
                                                 categories.map(category =>
@@ -157,24 +174,28 @@ export default function AddProductForm({ url, data }) {
                                     className="input"
                                     placeholder="Price"
                                     style={{ marginBottom: '10px' }}
+                                    id='feature-price-id'
                                 />
                                 <input
                                     type="number"
                                     className="input"
                                     placeholder="Sale Price Percent"
                                     style={{ marginBottom: '10px' }}
+                                    id='feature-sale-percent-id'
                                 />
                                 <textarea
                                     type="text"
                                     className="input"
                                     placeholder="Description"
-                                    style={{ marginBottom: '10px' }}>
+                                    style={{ marginBottom: '10px' }}
+                                    id='feature-description-id'>
                                 </textarea>
                                 <input
                                     type="number"
                                     className="input"
                                     placeholder="Count On Stock"
                                     style={{ marginBottom: '10px' }}
+                                    id='feature-stock-count-id'
                                 />
                                 <div id='features'></div>
                             </div>

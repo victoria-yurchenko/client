@@ -1,7 +1,7 @@
 import React from 'react';
 import './../../App.css'
 import { Icon } from '@iconify/react';
-import ProductCart from '../ProductCart';
+import ProductCart from '../HelperComponents/ProductCart';
 import { useState } from 'react';
 import { useEffect } from 'react';
 

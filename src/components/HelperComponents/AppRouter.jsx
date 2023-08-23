@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Home from './Home/Home';
-import Store from './Store/Store';
-import AddProductForm from './AddProductForm';
+import Home from '../Home/Home';
+import Store from '../Store/Store';
+import AddProductForm from '../AddProductForm';
 
 export default function AppRouter({ url, data }) {
 

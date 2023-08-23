@@ -1,5 +1,5 @@
 import React from 'react';
-import './../App.css';
+import './../../App.css';
 import { Icon } from '@iconify/react';
 
 export default function ProductCart({ image, isNew, sale, category, productName, price }) {

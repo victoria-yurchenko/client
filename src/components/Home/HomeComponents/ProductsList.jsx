@@ -1,6 +1,6 @@
 import React from 'react';
 import Slider from 'react-slick';
-import ProductCart from '../../ProductCart';
+import ProductCart from '../../HelperComponents/ProductCart';
 
 
 export default function ProductsList() {
