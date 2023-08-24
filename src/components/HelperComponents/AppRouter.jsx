@@ -35,6 +35,7 @@ export default function AppRouter({ url, data }) {
                 <Route path='/store' element={<Store data={data} />} />
                 <Route path='/guitars' element={<Store data={data} />} />
                 <Route path='/addnew' element={<AddProductForm url={url} data={data} />} />
+                <Route path='/changeproduct' element={<AddProductForm url={url} data={data} />} />
             </Routes>
         </BrowserRouter>
     )

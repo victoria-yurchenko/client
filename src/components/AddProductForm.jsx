@@ -13,10 +13,12 @@ export default function AddProductForm({ url, data }) {
     const [selectedCategories, setSelectedCategories] = useState([]);
 
     useEffect(() => {
-        console.log(imagesBase64);
-        console.log("cat:  " + categories);
-
+        // console.log(imagesBase64);
     }, [imagesBase64]);
+
+    useEffect(() => {
+        console.log(`features: ${features}`);
+    }, [features]);
 
     const validation = (rule) => {
 
@@ -60,13 +62,13 @@ export default function AddProductForm({ url, data }) {
         featureNameDiv.className = 'feature';
 
         const featureName = document.createElement('input');
-        featureName.className = 'input';
+        featureName.className = 'input feature-name';
         featureName.style.marginBottom = '10px';
         featureName.style.marginTop = '30px';
         featureName.placeholder = 'Feature Name';
 
         const feature = document.createElement('input');
-        feature.className = 'input';
+        feature.className = 'input feature';
         feature.style.marginBottom = '10px';
         feature.placeholder = 'Feature';
 
@@ -88,17 +90,15 @@ export default function AddProductForm({ url, data }) {
     const collectFeatures = () => {
         const separator = '____';
 
-        const featuresNames = document.getElementsByClassName('feature-name');
-        const featuresValues = document.getElementsByClassName('feature');
+        const featuresNames = document.getElementsByClassName('input feature-name');
+        const featuresValues = document.getElementsByClassName('input feature');
 
+        console.log(featuresNames);
+        console.log(featuresValues);
         const toSend = [];
 
         for (let i = 0; i < featuresNames.length; i++) {
-            const featureToSend = `
-                ${featuresNames[i].value}
-                ${separator}
-                ${featuresValues[i].value}
-            `;
+            const featureToSend = `${featuresNames[i].value}${separator}${featuresValues[i].value}`;
             toSend.push(featureToSend);
         }
         setFeatures(toSend);
@@ -112,26 +112,34 @@ export default function AddProductForm({ url, data }) {
     };
 
     const handleSubmit = (event) => {
-
         collectFeatures();
 
-        let product = {
-            productName: document.getElementById('feature-name-id').value,
-            categories: selectedCategories,
-            price: document.getElementById('feature-price-id').value,
-            salePricePercent: document.getElementById('feature-sale-percent').value,
-            description: document.getElementById('feature-description-id').value,
-            countOnStock: document.getElementById('feature-stock-count-id').value,
-            pictures: imagesBase64,
-            features: features
-        };
+        const _productName = document.getElementById('feature-name-id').value;
+        const _categories = selectedCategories;
+        const _price = document.getElementById('feature-price-id').value;
+        const _salePricePercent = document.getElementById('feature-sale-percent-id').value;
+        const _description = document.getElementById('feature-description-id').value;
+        const _countOnStock = document.getElementById('feature-stock-count-id').value;
+        const _pictures = imagesBase64;
+        const _features = features;
 
+        let product = {
+            productName: _productName,
+            categories: _categories,
+            price: _price,
+            salePricePercent: _salePricePercent,
+            description: _description,
+            countOnStock: _countOnStock,
+            pictures: _pictures,
+            features: _features
+        };
+        console.log(url)
         const options = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json; charset=utf-8' },
             body: JSON.stringify(product)
           };
-          fetch(url, options)
+          fetch('http://localhost:5089/api/maestro', options)
             .then(response => console.log(response))
             .catch(error => console.log(error));
     };

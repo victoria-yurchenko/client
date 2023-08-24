@@ -2,7 +2,7 @@ import React from 'react';
 import './../../App.css';
 import { Icon } from '@iconify/react';
 
-export default function ProductCart({ image, isNew, sale, category, productName, price }) {
+export default function ProductCart({ image, isNew, sale, category, productName, price, isAdmitSession }) {
 
     return (
         <div class="product m-1">
@@ -12,13 +12,22 @@ export default function ProductCart({ image, isNew, sale, category, productName,
                     {
                         sale != 0
                             ? <span class="sale">-{sale}%</span>
-                            : <span style={{ display: 'none' }}></span>
+                            : <></>
                     }
                     {
                         isNew
                             ? <span class="new">NEW</span>
-                            : <span style={{ display: 'none' }}></span>
+                            : <></>
                     }
+                    {
+                        isNew
+                            ?
+                            <a class="new btn" style={{ marginLeft: '10px', border: '2px solid #D10024', borderRadius: 1, backgroundColor: '#FFF' }} href='/changeproduct'>
+                                <label style={{ cursor: 'pointer'}}><Icon icon={'fa:cog'} style={{ marginRight: '10px' }} />Change</label>
+                            </a>
+                            : <></>
+                    }
+
                 </div>
             </div>
             <div class="product-body">
@@ -27,7 +36,7 @@ export default function ProductCart({ image, isNew, sale, category, productName,
                     <a href="#"
                         style={{
                             textDecoration: 'none',
-                            color:'black'
+                            color: 'black'
                         }}
                     >
                         {productName}
