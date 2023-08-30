@@ -1,6 +1,6 @@
 import { Icon } from '@iconify/react';
 import React, { useState } from 'react';
-import '../App.css';
+import '../../../App.css';
 import imageToBase64 from 'image-to-base64/browser';
 import { useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
@@ -19,10 +19,6 @@ export default function AddProductForm({ url, data }) {
     useEffect(() => {
         console.log(`features: ${features}`);
     }, [features]);
-
-    const validation = (rule) => {
-
-    };
 
     const handleSelect = (event) => {
         let images = [];

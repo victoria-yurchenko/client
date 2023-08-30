@@ -5,10 +5,8 @@ import ProductCart from '../HelperComponents/ProductCart';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
-export default function Store({data}) {
-
+export default function Store({ data }) {
     
-
     return (
         <div className="section">
             <div className="container">
@@ -18,15 +16,15 @@ export default function Store({data}) {
                             <h3 className="aside-title">Categories</h3>
                             <div className="checkbox-filter">
                                 {
-                                    data.categories.map((c, index) => 
-                                        <div className="input-checkbox" index={index}>
+                                    data.categories.map((c, index) =>
+                                        <div key={index} className="input-checkbox" index={index}>
                                             <input type="checkbox" id={index} />
                                             <label htmlFor={index}>
                                                 <span></span>
                                                 {c}
                                                 <small>(120)</small>
                                             </label>
-                                        </div>    
+                                        </div>
                                     )
                                 }
 
@@ -178,10 +176,11 @@ export default function Store({data}) {
 
                         <div className="row">
                             {
-                                data.productsDBO.map(item => {
-                                    console.log(item)
-                                    return <div className="col-md-4 col-xs-6">
-                                        <ProductCart
+                                data.productsDBO.map(item => 
+                                    <div className="col-md-4 col-xs-6">
+                                        {
+                                            <ProductCart
+                                            key={item.productId}
                                             image={item.image}
                                             isNew={item.isNew}
                                             isSale={item.isSale}
@@ -189,9 +188,11 @@ export default function Store({data}) {
                                             price={item.price}
                                             category={item.category}
                                             productName={item.productName}
-                                        />
+                                            productId={item.productId}
+                                            />
+                                        }
                                     </div>
-                                })
+                                )
                             }
                         </div>
 

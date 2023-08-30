@@ -1,18 +1,39 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from '../Home/Home';
 import Store from '../Store/Store';
-import AddProductForm from '../AddProductForm';
+import AddProductForm from '.././Store/StoreComponents/AddProductForm';
+import ChangeProductForm from '../Store/StoreComponents/ChangeProductForm';
+import Product from '../Store/Product';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 export default function AppRouter({ url, data }) {
+
+    const [selectedProductId, setSelectedProductId] = useState(0);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+
+
+    //problem with home page now
+
+    useEffect(() => {
+        if (selectedProductId != 0) {
+            fetch(`http://localhost:5089/api/maestro/${selectedProductId}`)
+                .then(responce => responce.json().then(data => {
+                    console.log(data);
+                    setSelectedProduct(data);
+                }))
+                .catch(error => console.log(error));
+        }
+    }, [selectedProductId]);
 
     const getProductsByCategory = (categoryName) => {
 
         // error with valid data here
 
         let products = {
-            productsDBO : [],
-            categories : []
+            productsDBO: [],
+            categories: []
         };
         console.log(data);
 
@@ -31,11 +52,12 @@ export default function AppRouter({ url, data }) {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path='/' element={<Home />} />
+                <Route path='/' element={<Home/>} />
                 <Route path='/store' element={<Store data={data} />} />
                 <Route path='/guitars' element={<Store data={data} />} />
                 <Route path='/addnew' element={<AddProductForm url={url} data={data} />} />
-                <Route path='/changeproduct' element={<AddProductForm url={url} data={data} />} />
+                <Route path='/product/:id' element={<Product products={data.productsDBO} />} />
+                <Route path='/changeproduct/:id' element={<ChangeProductForm url={url}  />} />
             </Routes>
         </BrowserRouter>
     )
