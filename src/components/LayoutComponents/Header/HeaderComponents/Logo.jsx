@@ -2,8 +2,8 @@ import React from 'react';
 
 export default function Logo () {
     return (
-        <div class="header-logo">
-            <a href="#" class="logo">
+        <div className="header-logo">
+            <a href="#" className="logo">
                 <img src="" alt="" />
             </a>
         </div>

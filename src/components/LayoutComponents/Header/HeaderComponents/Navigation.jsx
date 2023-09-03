@@ -1,18 +1,35 @@
-import React from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import { useState } from 'react';
 import CategoryDropdown from './CategoryDropdown';
 import { NavDropdown } from 'react-bootstrap';
 import NavigationItem from './NavigationItem';
 import HeaderIcon from './HeaderIcon';
 
-export default function Navigation({ categoriesList }) {
+export default function Navigation({ categoriesList, clicked }) {
 
     const [isClicked, setIsClicked] = useState(false);
+    const [responsive, setResponsive] = useState('')
+
+    useLayoutEffect(() => {
+
+        if(clicked)
+            setResponsive('active');
+        else
+            setResponsive('remove');
+    }, [clicked]);
+    
+    const handleCardPage = () => {
+        window.location.replace(`http://localhost:3000/card`);
+    };
+
+    const handleAccountPage = () => {
+        window.location.replace(`http://localhost:3000/login`);
+    };
 
     return (
         <nav id="navigation">
             <div className="container">
-                <div id="responsive-nav">
+                <div id="responsive-nav" className={responsive}>
                     <ul className="main-nav nav navbar">
                         <NavigationItem
                             categoryName='Home'
@@ -21,7 +38,9 @@ export default function Navigation({ categoriesList }) {
                         <NavigationItem
                             categoryName='Hot Deals'
                             linkToPage='#'
+                            
                         />
+                        
                         <li className='nav-item'>
 
                             <CategoryDropdown />
@@ -32,8 +51,10 @@ export default function Navigation({ categoriesList }) {
 
                         </li>
 
+
                         <li className='nav-item '>
-                            <a className='nav-link navbar-text ' href="#"
+                            <a className='nav-link navbar-text'
+                                onClick={handleAccountPage}
                                 style={{ fontWeight: '500' }}>
                                 <HeaderIcon
                                     icon='fa:user-o'
@@ -52,7 +73,8 @@ export default function Navigation({ categoriesList }) {
                             </a>
                         </li>
                         <li className='nav-item'>
-                            <a className='nav-link navbar-text' href="#"
+                            <a className='nav-link navbar-text' 
+                                onClick={handleCardPage}
                                 style={{ fontWeight: '500' }}>
                                 <HeaderIcon
                                     icon='fa:shopping-cart'

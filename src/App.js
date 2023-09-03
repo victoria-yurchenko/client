@@ -1,6 +1,6 @@
 import './App.css';
 import React from 'react';
-import Header from './components/Header/Header';
+import Header from './components/LayoutComponents/Header/Header';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import NewsLetter from './components/LayoutComponents/NewsLetter';

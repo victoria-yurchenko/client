@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Search from './HeaderComponents/Search';
 import Logo from './HeaderComponents/Logo';
 import Menu from './HeaderComponents/Menu';
@@ -7,23 +7,28 @@ import Navigation from './HeaderComponents/Navigation';
 
 export default function Header() {
 
+    const [clicked, setClicked] = useState(false);
+
+    const onClicked = (value) => {
+        setClicked(value);
+    };
 
     return (
         <>
             <div>
                 <header>
                     <div id="header">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-3">
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-md-3">
                                     <Logo />
                                 </div>
-                                <div class="col-md-6 col-sm-10 col-xs-10">
+                                <div className="col-md-6 col-sm-10 col-xs-10">
                                     <Search />
                                 </div>
-                                <div class="col-md-3 col-sm-2 col-xs-2 clearfix">
-                                    <div class="header-ctn" >
-                                        <Menu />
+                                <div className="col-md-3 col-sm-2 col-xs-2 clearfix">
+                                    <div className="header-ctn" >
+                                        <Menu onClicked={onClicked} clicked={clicked} />
                                     </div>
                                 </div>
                             </div>
@@ -31,7 +36,7 @@ export default function Header() {
                     </div>
                 </header>
             </div>
-            <Navigation/>
+            <Navigation clicked={clicked} />
         </>
     )
 }

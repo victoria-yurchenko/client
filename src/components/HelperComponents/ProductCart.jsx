@@ -16,15 +16,37 @@ export default function ProductCart({
     productId
 }) {
 
-    const [selectedProductId, setSelectedProductId] = useState(0);
+    // const [selectedProductId, setSelectedProductId] = useState(0);
 
-    const handleOnClick = () => {
+    const handleOnChange = () => {
         window.location.replace(`http://localhost:3000/changeproduct/${productId}`);
     };
 
     const handleView = () => {
         window.location.replace(`http://localhost:3000/product/${productId}`);
     };
+
+    const handleOnDelete = () => {
+        window.location.replace(`http://localhost:3000/product/delete/${productId}`);
+    };
+
+    const handleAddToCard = () => {
+     if (localStorage.getItem('UserLoggedId') != null) { // the user is logged
+        const addToCard = {
+            userId: localStorage.getItem('UserLoggedId'),
+            productId: productId
+        }
+        const options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=utf-8' },
+            body: JSON.stringify(addToCard)
+        };
+        fetch('http://localhost:5089/api/maestro/addtocard', options)
+            .then(response => console.log(response))
+            .catch(error => console.log(error));
+     }   
+     else console.log(0)
+    }
 
     return (
         <div className="product m-1">
@@ -42,10 +64,19 @@ export default function ProductCart({
                             : <></>
                     }
                     {
-                        isNew
+                        isNew //isAdmin here
                             ?
                             <a className="new btn" style={{ marginLeft: '10px', border: '2px solid #D10024', borderRadius: 1, backgroundColor: '#FFF' }} >
-                                <label style={{ cursor: 'pointer' }} onClick={handleOnClick}><Icon icon={'fa:cog'} style={{ marginRight: '10px' }} />Change</label>
+                                <label style={{ cursor: 'pointer' }} onClick={handleOnChange}><Icon icon={'fa:cog'} style={{ marginRight: '10px' }} />Change</label>
+
+                            </a>
+                            : <></>
+                    }
+                    {
+                        isNew //isAdmin here
+                            ?
+                            <a className="new btn" style={{ marginLeft: '10px', border: '2px solid #D10024', borderRadius: 1, backgroundColor: '#FFF' }} >
+                                <label style={{ cursor: 'pointer' }} onClick={handleOnDelete}><Icon icon={'fa:trash'} style={{ marginRight: '10px' }} />Delete</label>
 
                             </a>
                             : <></>
@@ -73,12 +104,11 @@ export default function ProductCart({
                 }
                 <div className="product-btns">
                     <button className="add-to-wishlist"><i><Icon icon='fa:heart-o' /></i><span className="tooltipp">add to wishlist</span></button>
-                    <button className="add-to-compare"><i><Icon icon='fa:exchange' /></i><span className="tooltipp">add to compare</span></button>
                     <button className="quick-view" onClick={handleView}><i><Icon icon='fa:eye' /></i><span className="tooltipp">view</span></button>
                 </div>
             </div>
             <div className="add-to-cart">
-                <button className="add-to-cart-btn"><i><Icon icon='fa:shopping-cart' /></i> add to cart</button>
+                <button className="add-to-cart-btn" onClick={handleAddToCard}><i><Icon icon='fa:shopping-cart' /></i> add to cart</button>
             </div>
         </div>
     )

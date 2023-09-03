@@ -256,8 +256,8 @@ textarea.input {
 }
 
 .input-radio input[type="radio"]:checked+label span, .input-checkbox input[type="checkbox"]:checked+label span {
-  background-color: #D10024;
-  border-color: #D10024;
+  /* background-color: #D10024;
+  border-color: #D10024; */
 }
 
 .input-radio input[type="radio"]:checked+label span:after {
@@ -665,12 +665,13 @@ textarea.input {
 
 @media only screen and (max-width: 991px) {
   .header-ctn .menu-toggle {
-    display: inline-block;
+    display: block;
   }
   #responsive-nav {
     position: fixed;
     left: 0;
     top: 0;
+    color: #E4E7ED;
     background: #15161D;
     height: 100vh;
     max-width: 250px;
@@ -1327,7 +1328,7 @@ textarea.input {
 
 .store-grid li.active {
   background-color: #D10024;
-  border-color: #D10024;
+  border-color: #d1002352;
   color: #FFF;
   cursor: default;
 }

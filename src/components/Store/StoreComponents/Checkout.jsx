@@ -1,173 +1,250 @@
-import React from 'react';
-import './../App.css';
+import React, { useEffect, useState } from 'react';
+import './../../../App.css';
 
 export default function Checkout() {
-  return (
-   
-		<div class="section">
-        <div class="container">
-            <div class="row">
 
-                <div class="col-md-7">
-                    <div class="billing-details">
-                        <div class="section-title">
-                            <h3 class="title">Billing address</h3>
-                        </div>
-                        <div class="form-group m-2">
-                            <input class="input" type="text" name="first-name" placeholder="First Name"/>
-                        </div>
-                        <div class="form-group m-2">
-                            <input class="input" type="text" name="last-name" placeholder="Last Name"/>
-                        </div>
-                        <div class="form-group m-2">
-                            <input class="input" type="email" name="email" placeholder="Email"/>
-                        </div>
-                        <div class="form-group m-2">
-                            <input class="input" type="text" name="address" placeholder="Address"/>
-                        </div>
-                        <div class="form-group m-2">
-                            <input class="input" type="text" name="city" placeholder="City"/>
-                        </div>
-                        <div class="form-group m-2">
-                            <input class="input" type="text" name="country" placeholder="Country"/>
-                        </div>
-                        <div class="form-group m-2">
-                            <input class="input" type="text" name="zip-code" placeholder="ZIP Code"/>
-                        </div>
-                        <div class="form-group m-2">
-                            <input class="input" type="tel" name="tel" placeholder="Telephone"/>
-                        </div>
-                        <div class="form-group m-2">
-                            <div class="input-checkbox">
-                                <input type="checkbox" id="create-account"/>
-                                <label for="create-account">
-                                    <span></span>
-                                    Create Account?
-                                </label>
-                                <div class="caption">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
-                                    <input class="input" type="password" name="password" placeholder="Enter Your Password"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    const [user, setUser] = useState(null);
+    const [products, setProducts] = useState(null);
+    const [totalPrice, setTotalPrice] = useState(0);
 
-                    <div class="shiping-details">
-                        <div class="section-title">
-                            <h3 class="title">Shiping address</h3>
-                        </div>
-                        <div class="input-checkbox">
-                            <input type="checkbox" id="shiping-address"/>
-                            <label for="shiping-address">
-                                <span></span>
-                                Ship to a diffrent address?
-                            </label>
-                            <div class="caption">
-                                <div class="form-group">
-                                    <input class="input" type="text" name="first-name" placeholder="First Name"/>
-                                </div>
-                                <div class="form-group">
-                                    <input class="input" type="text" name="last-name" placeholder="Last Name"/>
-                                </div>
-                                <div class="form-group">
-                                    <input class="input" type="email" name="email" placeholder="Email"/>
-                                </div>
-                                <div class="form-group">
-                                    <input class="input" type="text" name="address" placeholder="Address"/>
-                                </div>
-                                <div class="form-group">
-                                    <input class="input" type="text" name="city" placeholder="City"/>
-                                </div>
-                                <div class="form-group">
-                                    <input class="input" type="text" name="country" placeholder="Country"/>
-                                </div>
-                                <div class="form-group">
-                                    <input class="input" type="text" name="zip-code" placeholder="ZIP Code"/>
-                                </div>
-                                <div class="form-group">
-                                    <input class="input" type="tel" name="tel" placeholder="Telephone"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    useEffect(() => {
+        fetch('http://localhost:5089/api/maestro/card?' + new URLSearchParams({
+            userId: localStorage.getItem('UserLoggedId')
+        }))
+            .then(responce => responce.json().then(data => {
+                console.log(data);
+                setProducts(data);
+                let total = 0;
+                data.map(item => total += item.newPrice);
+                setTotalPrice(total);
+            }))
+            .catch(error => console.log(error));
 
-                    <div class="order-notes">
-                        <textarea class="input" placeholder="Order Notes"></textarea>
-                    </div>
-                </div>
+        console.log(localStorage.getItem('UserLoggedId'))
+        fetch('http://localhost:5089/api/users/getuser?' + new URLSearchParams({
+            userId: localStorage.getItem('UserLoggedId')
+        }))
+            .then(responce => responce.json().then(data => {
+                console.log(data);
+                setUser(data);
+            }))
+            .catch(error => console.log(error));
+    }, []);
 
-                <div class="col-md-5 order-details">
-                    <div class="section-title text-center">
-                        <h3 class="title">Your Order</h3>
+    const handleCheck = (event) => {
+        const termsAndConditions = event.target;
+        const submitButton = document.getElementById('submit-btn-id');
+        if (termsAndConditions.checked) {
+            submitButton.style.backgroundColor = '#D10024';
+            submitButton.style.pointerEvents = '';
+            submitButton.style.cursor = 'pointer';
+        }
+        else {
+            submitButton.style.pointerEvents = 'none';
+            submitButton.style.cursor = 'default';
+            submitButton.style.backgroundColor = '#d10023a5';
+        }
+    };
+
+    const handleSubmitOrder = () => {
+        const differentAddress = document.getElementById('shiping-address');
+        let address = null;
+
+        if (!differentAddress.checked) {
+            address = {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                address: user.address,
+                city: user.city,
+                zipCode: user.zipCode,
+                phone: user.phone
+            };
+        }
+        else {
+            address = {
+                firstName: document.getElementById('f-name').value,
+                lastName: document.getElementById('l-name').value,
+                email: document.getElementById('e-mail').value,
+                address: document.getElementById('ad-s').value,
+                city: document.getElementById('c-y').value,
+                zipCode: document.getElementById('z-code').value,
+                phone: document.getElementById('t-phone').value
+            };
+        }
+
+        const toSend = {
+            products: products,
+            userId: user.id,
+            address: address
+        };
+        const options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=utf-8' },
+            body: JSON.stringify(toSend)
+        };
+        fetch('http://localhost:5089/api/maestro/submitorder', options)
+            .then(response => console.log(response))
+            .catch(error => console.log(error));
+    };
+
+    return (
+        <div className="section">
+            {
+                products != null && user != null
+                    ?
+                    <div className="container">
+                        <div className="row">
+
+                            <div className="col-md-7">
+                                <div className="billing-details">
+                                    <div className="section-title" >
+                                        <h3 className="title">Billing address</h3>
+                                    </div>
+                                    <div className="form-group m-2">
+                                        <span className='link-secondary '>First Name:</span>
+                                        <span className='link-dark ' disabled style={{ fontWeight: 600 }}> {user.firstName}</span>
+                                    </div>
+                                    <div className="form-group m-2">
+                                        <span className='link-secondary '>Last Name:</span>
+                                        <span className='link-dark ' disabled style={{ fontWeight: 600 }}> {user.lastName}</span>
+                                    </div>
+                                    <div className="form-group m-2">
+                                        <span className='link-secondary '>Email:</span>
+                                        <span className='link-dark ' disabled style={{ fontWeight: 600 }}> {user.email}</span>
+                                    </div>
+                                    <div className="form-group m-2">
+                                        <span className='link-secondary '>Address:</span>
+                                        <span className='link-dark ' disabled style={{ fontWeight: 600 }}> {user.address}</span>
+                                    </div>
+                                    <div className="form-group m-2">
+                                        <span className='link-secondary '>City:</span>
+                                        <span className='link-dark ' disabled style={{ fontWeight: 600 }}> {user.city}</span>
+                                    </div>
+                                    <div className="form-group m-2">
+                                        <span className='link-secondary '>Zip Code:</span>
+                                        <span className='link-dark ' disabled style={{ fontWeight: 600 }}> {user.zipCode}</span>
+                                    </div>
+                                    <div className="form-group m-2">
+                                        <span className='link-secondary '>Phone Number:</span>
+                                        <span className='link-dark ' disabled style={{ fontWeight: 600 }}> {user.phone}</span>
+                                    </div>
+                                </div>
+
+                                <div className="shiping-details">
+                                    <div className="section-title">
+                                        <h3 className="title">Shiping address</h3>
+                                    </div>
+                                    <div className="input-checkbox">
+                                        <input type="checkbox" id="shiping-address" />
+                                        <label for="shiping-address">
+                                            <span></span>
+                                            Ship to a diffrent address?
+                                        </label>
+                                        <div className="caption">
+                                            <div className="form-group m-2">
+                                                <input id='f-name' className="input" type="text" name="first-name" placeholder="First Name" />
+                                            </div>
+                                            <div className="form-group m-2">
+                                                <input id='l-name' className="input" type="text" name="last-name" placeholder="Last Name" />
+                                            </div>
+                                            <div className="form-group m-2">
+                                                <input id='e-mail' className="input" type="email" name="email" placeholder="Email" />
+                                            </div>
+                                            <div className="form-group m-2">
+                                                <input id='ad-s' className="input" type="text" name="address" placeholder="Address" />
+                                            </div>
+                                            <div className="form-group m-2">
+                                                <input id='c-y' className="input" type="text" name="city" placeholder="City" />
+                                            </div>
+                                            <div className="form-group m-2">
+                                                <input id='z-code' className="input" type="text" name="zip-code" placeholder="ZIP Code" />
+                                            </div>
+                                            <div className="form-group m-2">
+                                                <input id='t-phone' className="input" type="tel" name="tel" placeholder="Telephone" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="order-notes">
+                                    <textarea className="input" placeholder="Order Notes"></textarea>
+                                </div>
+                            </div>
+
+                            <div className="col-md-5 order-details" style={{ marginTop: '20px' }}>
+                                <div className="section-title text-center">
+                                    <h3 className="title">Your Order</h3>
+                                </div>
+                                <div className="order-summary">
+                                    <div className="order-col">
+                                        <div><strong>PRODUCT</strong></div>
+                                        <div><strong>TOTAL</strong></div>
+                                    </div>
+                                    <div className="order-products">
+                                        {
+                                            products.map(p =>
+                                                <div className="order-col">
+                                                    <div>1x {p.name}</div>
+                                                    <div>${p.newPrice}</div>
+                                                </div>
+                                            )
+                                        }
+                                    </div>
+                                    <div className="order-col">
+                                        <div>Shiping</div>
+                                        <div><strong>FREE</strong></div>
+                                    </div>
+                                    <div className="order-col">
+                                        <div><strong>TOTAL</strong></div>
+                                        <div><strong className="order-total">${totalPrice}</strong></div>
+                                    </div>
+                                </div>
+                                <div className="payment-method">
+                                    <div className="input-radio">
+                                        <input type="radio" name="payment" id="payment-1" />
+                                        <label for="payment-1">
+                                            <span></span>
+                                            Direct Bank Transfer
+                                        </label>
+                                        <div className="caption">
+                                            <p>Direct Bank Transfer info</p>
+                                        </div>
+                                    </div>
+                                    <div className="input-radio">
+                                        <input type="radio" name="payment" id="payment-2" />
+                                        <label for="payment-2">
+                                            <span></span>
+                                            Cheque Payment
+                                        </label>
+                                        <div className="caption">
+                                            <p>Cheque Paymnet info</p>
+                                        </div>
+                                    </div>
+                                    <div className="input-radio">
+                                        <input type="radio" name="payment" id="payment-3" />
+                                        <label for="payment-3">
+                                            <span></span>
+                                            Paypal System
+                                        </label>
+                                        <div className="caption">
+                                            <p>Paypal System info</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="input-checkbox">
+                                    <input type="checkbox" id="terms" onChange={handleCheck} />
+                                    <label for="terms">
+                                        <span></span>
+                                        I've read and accept the <a href="#">terms & conditions</a>
+                                    </label>
+                                </div>
+                                <a href='#' className="primary-btn order-submit" id='submit-btn-id' style={{ backgroundColor: '#d10023a5' }} onClick={handleSubmitOrder}>submit order</a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="order-summary">
-                        <div class="order-col">
-                            <div><strong>PRODUCT</strong></div>
-                            <div><strong>TOTAL</strong></div>
-                        </div>
-                        <div class="order-products">
-                            <div class="order-col">
-                                <div>1x Product Name Goes Here</div>
-                                <div>$980.00</div>
-                            </div>
-                            <div class="order-col">
-                                <div>2x Product Name Goes Here</div>
-                                <div>$980.00</div>
-                            </div>
-                        </div>
-                        <div class="order-col">
-                            <div>Shiping</div>
-                            <div><strong>FREE</strong></div>
-                        </div>
-                        <div class="order-col">
-                            <div><strong>TOTAL</strong></div>
-                            <div><strong class="order-total">$2940.00</strong></div>
-                        </div>
-                    </div>
-                    <div class="payment-method">
-                        <div class="input-radio">
-                            <input type="radio" name="payment" id="payment-1"/>
-                            <label for="payment-1">
-                                <span></span>
-                                Direct Bank Transfer
-                            </label>
-                            <div class="caption">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                            </div>
-                        </div>
-                        <div class="input-radio">
-                            <input type="radio" name="payment" id="payment-2"/>
-                            <label for="payment-2">
-                                <span></span>
-                                Cheque Payment
-                            </label>
-                            <div class="caption">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                            </div>
-                        </div>
-                        <div class="input-radio">
-                            <input type="radio" name="payment" id="payment-3"/>
-                            <label for="payment-3">
-                                <span></span>
-                                Paypal System
-                            </label>
-                            <div class="caption">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="input-checkbox">
-                        <input type="checkbox" id="terms"/>
-                        <label for="terms">
-                            <span></span>
-                            I've read and accept the <a href="#">terms & conditions</a>
-                        </label>
-                    </div>
-                    <a href="#" class="primary-btn order-submit">Place order</a>
-                </div>
-            </div>
+                    : <></>
+            }
         </div>
-    </div>
-
-  )
+    )
 }

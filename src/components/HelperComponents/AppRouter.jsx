@@ -7,6 +7,12 @@ import ChangeProductForm from '../Store/StoreComponents/ChangeProductForm';
 import Product from '../Store/Product';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import Checkout from '../Store/StoreComponents/Checkout';
+import Login from '../Account/Login';
+import DeleteProductForm from '../Store/StoreComponents/DeleteProductForm';
+import Registration from '../Account/Registration';
+import UserPage from '../Account/Account';
+import ShoppingCard from '../Store/ShoppingCard';
 
 export default function AppRouter({ url, data }) {
 
@@ -52,12 +58,18 @@ export default function AppRouter({ url, data }) {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path='/' element={<Home/>} />
+                <Route path='/' element={<Home />} />
+                <Route path='/login' element={<Login />} />
+                <Route path='/myaccount' element={<UserPage />} />
+                <Route path='/registration' element={<Registration />} />
+                <Route path='/checkout' element={<Checkout />} />
                 <Route path='/store' element={<Store data={data} />} />
                 <Route path='/guitars' element={<Store data={data} />} />
                 <Route path='/addnew' element={<AddProductForm url={url} data={data} />} />
                 <Route path='/product/:id' element={<Product products={data.productsDBO} />} />
-                <Route path='/changeproduct/:id' element={<ChangeProductForm url={url}  />} />
+                <Route path='/changeproduct/:id' element={<ChangeProductForm url={url} />} />
+                <Route path='/product/delete/:id' element={<DeleteProductForm products={data.productsDBO} />} />
+                <Route path='/card' element={<ShoppingCard />} />
             </Routes>
         </BrowserRouter>
     )
