@@ -180,15 +180,17 @@ export default function Store({ data }) {
                                     <div className="col-md-4 col-xs-6">
                                         {
                                             <ProductCart
-                                            key={item.productId}
-                                            image={item.image}
-                                            isNew={item.isNew}
-                                            isSale={item.isSale}
-                                            sale={item.sale}
-                                            price={item.price}
-                                            category={item.category}
-                                            productName={item.productName}
-                                            productId={item.productId}
+                                                key={item.productId}
+                                                image={item.image}
+                                                isNew={item.isNew}
+                                                isSale={item.isSale}
+                                                sale={item.sale}
+                                                price={item.price}
+                                                category={item.category}
+                                                productName={item.productName}
+                                                productId={item.productId}
+                                                newPrice={item.newPrice}
+                                                oldPrice={item.oldPrice}
                                             />
                                         }
                                     </div>

@@ -12,7 +12,7 @@ export default function Checkout() {
             userId: localStorage.getItem('UserLoggedId')
         }))
             .then(responce => responce.json().then(data => {
-                console.log(data);
+                // console.log(data);
                 setProducts(data);
                 let total = 0;
                 data.map(item => total += item.newPrice);
@@ -25,7 +25,7 @@ export default function Checkout() {
             userId: localStorage.getItem('UserLoggedId')
         }))
             .then(responce => responce.json().then(data => {
-                console.log(data);
+                // console.log(data);
                 setUser(data);
             }))
             .catch(error => console.log(error));
@@ -49,12 +49,11 @@ export default function Checkout() {
     const handleSubmitOrder = () => {
         const differentAddress = document.getElementById('shiping-address');
         let address = null;
-
+        // console.log(user)
         if (!differentAddress.checked) {
             address = {
                 firstName: user.firstName,
                 lastName: user.lastName,
-                email: user.email,
                 address: user.address,
                 city: user.city,
                 zipCode: user.zipCode,
@@ -65,7 +64,6 @@ export default function Checkout() {
             address = {
                 firstName: document.getElementById('f-name').value,
                 lastName: document.getElementById('l-name').value,
-                email: document.getElementById('e-mail').value,
                 address: document.getElementById('ad-s').value,
                 city: document.getElementById('c-y').value,
                 zipCode: document.getElementById('z-code').value,
@@ -73,15 +71,21 @@ export default function Checkout() {
             };
         }
 
-        const toSend = {
+        const orderNotes = document.getElementById('order-notes-id').value;
+
+        const orderDBO = {
             products: products,
-            userId: user.id,
-            address: address
+            userId: user.userId,
+            address: address,
+            orderNotes: orderNotes
         };
+        console.log(JSON.stringify(orderDBO))
+
+        console.log(products)
         const options = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json; charset=utf-8' },
-            body: JSON.stringify(toSend)
+            body: JSON.stringify(orderDBO)
         };
         fetch('http://localhost:5089/api/maestro/submitorder', options)
             .then(response => console.log(response))
@@ -137,7 +141,7 @@ export default function Checkout() {
                                     </div>
                                     <div className="input-checkbox">
                                         <input type="checkbox" id="shiping-address" />
-                                        <label for="shiping-address">
+                                        <label htmlFor="shiping-address">
                                             <span></span>
                                             Ship to a diffrent address?
                                         </label>
@@ -168,7 +172,7 @@ export default function Checkout() {
                                 </div>
 
                                 <div className="order-notes">
-                                    <textarea className="input" placeholder="Order Notes"></textarea>
+                                    <textarea id='order-notes-id' className="input" placeholder="Order Notes"></textarea>
                                 </div>
                             </div>
 
@@ -203,7 +207,7 @@ export default function Checkout() {
                                 <div className="payment-method">
                                     <div className="input-radio">
                                         <input type="radio" name="payment" id="payment-1" />
-                                        <label for="payment-1">
+                                        <label htmlFor="payment-1">
                                             <span></span>
                                             Direct Bank Transfer
                                         </label>
@@ -213,7 +217,7 @@ export default function Checkout() {
                                     </div>
                                     <div className="input-radio">
                                         <input type="radio" name="payment" id="payment-2" />
-                                        <label for="payment-2">
+                                        <label htmlFor="payment-2">
                                             <span></span>
                                             Cheque Payment
                                         </label>
@@ -223,7 +227,7 @@ export default function Checkout() {
                                     </div>
                                     <div className="input-radio">
                                         <input type="radio" name="payment" id="payment-3" />
-                                        <label for="payment-3">
+                                        <label htmlFor="payment-3">
                                             <span></span>
                                             Paypal System
                                         </label>
@@ -234,7 +238,7 @@ export default function Checkout() {
                                 </div>
                                 <div className="input-checkbox">
                                     <input type="checkbox" id="terms" onChange={handleCheck} />
-                                    <label for="terms">
+                                    <label htmlFor="terms">
                                         <span></span>
                                         I've read and accept the <a href="#">terms & conditions</a>
                                     </label>

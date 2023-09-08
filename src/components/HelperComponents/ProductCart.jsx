@@ -8,10 +8,10 @@ import { Link } from 'react-router-dom';
 export default function ProductCart({
     image,
     isNew,
-    sale,
+    newPrice,
     category,
     productName,
-    price,
+    oldPrice,
     isAdminSession,
     productId
 }) {
@@ -54,8 +54,8 @@ export default function ProductCart({
                 <img src={image} alt="product" />
                 <div className="product-label">
                     {
-                        sale != 0
-                            ? <span className="sale">-{sale}%</span>
+                        newPrice < oldPrice
+                            ? <span className="sale">{newPrice}</span>
                             : <></>
                     }
                     {
@@ -97,9 +97,9 @@ export default function ProductCart({
                     </a>
                 </h3>
                 {
-                    sale != 0
-                        ? <h4 className="product-price">${price - price * sale / 100} <del className="product-old-price">${price}</del></h4>
-                        : <h4 className="product-price">${price}</h4>
+                    newPrice < oldPrice
+                        ? <h4 className="product-price">${newPrice} <del className="product-old-price">${oldPrice}</del></h4>
+                        : <h4 className="product-price">${newPrice}</h4>
 
                 }
                 <div className="product-btns">

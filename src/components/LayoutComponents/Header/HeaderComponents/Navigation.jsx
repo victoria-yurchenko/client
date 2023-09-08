@@ -11,19 +11,20 @@ export default function Navigation({ categoriesList, clicked }) {
     const [responsive, setResponsive] = useState('')
 
     useLayoutEffect(() => {
-
-        if(clicked)
+        if (clicked)
             setResponsive('active');
         else
             setResponsive('remove');
     }, [clicked]);
-    
+
     const handleCardPage = () => {
         window.location.replace(`http://localhost:3000/card`);
     };
 
     const handleAccountPage = () => {
-        window.location.replace(`http://localhost:3000/login`);
+        if (localStorage.getItem('UserLoggedId') == null)
+            window.location.replace(`http://localhost:3000/login`);
+        window.location.replace(`http://localhost:3000/myaccount`);
     };
 
     return (
@@ -38,9 +39,9 @@ export default function Navigation({ categoriesList, clicked }) {
                         <NavigationItem
                             categoryName='Hot Deals'
                             linkToPage='#'
-                            
+
                         />
-                        
+
                         <li className='nav-item'>
 
                             <CategoryDropdown />
@@ -50,19 +51,34 @@ export default function Navigation({ categoriesList, clicked }) {
                             >Categories</a> */}
 
                         </li>
+                        {
+                            localStorage.getItem('UserLoggedId') == null
+                                ?
+                                <li className='nav-item '>
+                                    <a className='nav-link navbar-text'
+                                        onClick={handleAccountPage}
+                                        style={{ fontWeight: '500' }}>
+                                        <HeaderIcon
+                                            icon='fa:user-o'
+                                            title='Login'
+                                            qti={0}
+                                        />
+                                    </a>
+                                </li>
+                                :
+                                <li className='nav-item '>
+                                    <a className='nav-link navbar-text'
+                                        onClick={handleAccountPage}
+                                        style={{ fontWeight: '500' }}>
+                                        <HeaderIcon
+                                            icon='fa:user-o'
+                                            title='My Account'
+                                            qti={0}
+                                        />
+                                    </a>
+                                </li>
+                        }
 
-
-                        <li className='nav-item '>
-                            <a className='nav-link navbar-text'
-                                onClick={handleAccountPage}
-                                style={{ fontWeight: '500' }}>
-                                <HeaderIcon
-                                    icon='fa:user-o'
-                                    title='My Account'
-                                    qti={0}
-                                />
-                            </a>
-                        </li>
                         <li className='nav-item'>
                             <a className='nav-link navbar-text' href="#"
                                 style={{ fontWeight: '500' }}>
@@ -73,7 +89,7 @@ export default function Navigation({ categoriesList, clicked }) {
                             </a>
                         </li>
                         <li className='nav-item'>
-                            <a className='nav-link navbar-text' 
+                            <a className='nav-link navbar-text'
                                 onClick={handleCardPage}
                                 style={{ fontWeight: '500' }}>
                                 <HeaderIcon

@@ -14,6 +14,7 @@ export default function ShoppingCard() {
             .then(responce => responce.json().then(data => {
                 console.log(data);
                 setProducts(data);
+                console.log(localStorage.getItem('UserLoggedId'))
                 let total = 0;
                 data.map(item => total += item.newPrice);
                 setTotalPrice(total);

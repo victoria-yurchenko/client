@@ -42,6 +42,7 @@ export default function Login() {
                         .then(data => {
                             console.log(data);
                             localStorage.setItem('UserLoggedId', data.id);
+                            console.log(localStorage.getItem('UserLoggedId'))
                         })
                         .catch(error => console.log(error));
                 else

@@ -18,18 +18,16 @@ export default function Registration() {
     const _email = document.getElementById('input-email').value;
     const _address = document.getElementById('address').value;
     const _city = document.getElementById('city').value;
-    const _country = document.getElementById('country').value;
     const _zipCode = document.getElementById('zip-code').value;
     const _phone = document.getElementById('tel').value;
 
     let user = {
       password: _password,
+      email: _email,
       firstName: _firstName,
       lastName: _lastName,
-      email: _email,
       address: _address,
       city: _city,
-      country: _country,
       zipCode: _zipCode,
       phone: _phone
     };
@@ -74,9 +72,6 @@ export default function Registration() {
               </div>
               <div className="form-group m-2">
                 <input id='city' className="input" type="text" name="city" placeholder="City" />
-              </div>
-              <div className="form-group m-2">
-                <input id='country' className="input" type="text" name="country" placeholder="Country" />
               </div>
               <div className="form-group m-2">
                 <input id='zip-code' className="input" type="text" name="zip-code" placeholder="ZIP Code" />

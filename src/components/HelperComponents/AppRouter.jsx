@@ -13,6 +13,7 @@ import DeleteProductForm from '../Store/StoreComponents/DeleteProductForm';
 import Registration from '../Account/Registration';
 import UserPage from '../Account/Account';
 import ShoppingCard from '../Store/ShoppingCard';
+import DeleteAccount from '../Account/DeleteAccount';
 
 export default function AppRouter({ url, data }) {
 
@@ -62,6 +63,7 @@ export default function AppRouter({ url, data }) {
                 <Route path='/login' element={<Login />} />
                 <Route path='/myaccount' element={<UserPage />} />
                 <Route path='/registration' element={<Registration />} />
+                <Route path='/deleteaccount' element={<DeleteAccount />} />
                 <Route path='/checkout' element={<Checkout />} />
                 <Route path='/store' element={<Store data={data} />} />
                 <Route path='/guitars' element={<Store data={data} />} />
