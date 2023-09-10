@@ -24,6 +24,7 @@ export default function Product({ products }) {
             .then(responce => responce.json().then(data => {
                 console.log(data);
                 setProduct(data);
+                console.log(data.pictures[0]);
             }))
             .catch(error => console.log(error));
     }, [products]);
@@ -97,15 +98,7 @@ export default function Product({ products }) {
                             <div className="col-md-5 col-md-push-2">
 
                                 <div className="slider-wrapper" style={{ height: '400px' }}>
-                                    <div className="slides-container" id="slides-container">
-                                        {
-                                            product.pictures.map(p =>
-                                                <div className="slide" key={p} style={{ marginTop: '100px' }}>
-                                                    <img src={p} alt="" />
-                                                </div>
-                                            )
-                                        }
-                                    </div>
+                                    <img src={`data:image/jpeg;base64,${product.pictures[0]}`} alt="" height={300} />
                                     {/* <i className="slide-arrow" id="slide-arrow-prev" onClick={handleClickPrevious}>
                                         <Icon icon='fa:arrow-left' style={{ backgroundColor: 'white', borderRadius: '5px' }} />
                                     </i>

@@ -12,7 +12,7 @@ export default function Store({ data }) {
     const params = useParams();
 
     useEffect(() => {
-        console.log(params);
+        console.log(data);
 
         let productsTemp = {
             productsDBO: [],
@@ -46,6 +46,7 @@ export default function Store({ data }) {
             }
             else
                 productsTemp.productsDBO = [...data.productsDBO];
+            console.log(productsTemp)
             setProducts(productsTemp);
         }
     }, []);
@@ -237,8 +238,7 @@ export default function Store({ data }) {
                                                 <div className="col-md-4 col-xs-6">
                                                     {
                                                         <ProductCart
-                                                            key={item.productId}
-                                                            image={item.image}
+                                                            image={`data:image/jpeg;base64,${item.image}`}
                                                             isNew={item.isNew}
                                                             isSale={item.isSale}
                                                             sale={item.sale}

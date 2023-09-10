@@ -16,6 +16,9 @@ export default function ProductCart({
     productId
 }) {
 
+    useEffect(() => {
+        // console.log(image)
+    })
     // const [selectedProductId, setSelectedProductId] = useState(0);
 
     const handleOnChange = () => {
@@ -51,7 +54,7 @@ export default function ProductCart({
     return (
         <div className="product m-1">
             <div className="product-img">
-                <img src={image} alt="product" />
+                <img src={`data:image/jpeg;base64,${image}`} alt="product" />
                 <div className="product-label">
                     {
                         newPrice < oldPrice
@@ -77,7 +80,7 @@ export default function ProductCart({
                         isNew //isAdmin here
                             ?
                             <div>
-                                <a className="new btn" style={{ marginLeft: '10px', border: '2px solid #D10024', borderRadius: 4, backgroundColor: '#FFF', marginTop: '10px'}} >
+                                <a className="new btn" style={{ marginLeft: '10px', border: '2px solid #D10024', borderRadius: 4, backgroundColor: '#FFF', marginTop: '0px' }} >
                                     <label style={{ cursor: 'pointer' }} onClick={handleOnDelete}><Icon icon={'fa:trash'} style={{ marginRight: '10px' }} />Delete</label>
                                 </a>
                             </div>

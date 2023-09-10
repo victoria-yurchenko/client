@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom';
 export default function ChangeProductForm({ products, url }) {
 
     const params = useParams();
-    const [product, setProduct] = useState(null);
+    const [product, setProduct] = useState({});
     const [imagesBase64, setImagesBase64] = useState([]);
     const [categories, setCategories] = useState([]);
     const [features, setFeatures] = useState([]);
@@ -21,10 +21,62 @@ export default function ChangeProductForm({ products, url }) {
                 console.log(data);
                 setProduct(data);
                 setCategories(data.categories);
+
             }))
             .catch(error => console.log(error));
-            console.log(products)
+        console.log(products)
     }, [products]);
+
+    useEffect(() => {
+        document.getElementById('feature-name-id').value = product.productName;
+        document.getElementById('feature-price-id').value = product.newPrice;
+        document.getElementById('feature-short-description-id').value = product.shortDescription;
+        document.getElementById('feature-description-id').value = product.description;
+        document.getElementById('feature-stock-count-id').value = product.countOnStock;
+
+        const features = splitFeatures(product.features);
+        features.map(f => {
+            const form = document.getElementById('features');
+
+            const div = document.createElement('div');
+
+            const featureNameDiv = document.createElement('div');
+            featureNameDiv.className = 'feature-name';
+
+            const featureDiv = document.createElement('div');
+            featureNameDiv.className = 'feature';
+
+            const featureName = document.createElement('input');
+            featureName.className = 'input feature-name';
+            featureName.style.marginBottom = '10px';
+            featureName.style.marginTop = '30px';
+            featureName.placeholder = 'Feature Name';
+            featureName.value = f.featureName;
+
+            const feature = document.createElement('input');
+            feature.className = 'input feature';
+            feature.style.marginBottom = '10px';
+            feature.placeholder = 'Feature';
+            feature.value = f.featureValue;
+
+            const removeButton = document.createElement('button');
+            removeButton.className = 'btn';
+            removeButton.style.marginBottom = '10px';
+            removeButton.style.fontWeight = '600';
+            removeButton.innerHTML = 'Remove';
+            removeButton.addEventListener('click', event => removeNode(event));
+
+            featureNameDiv.appendChild(featureName);
+            featureDiv.appendChild(feature);
+            div.appendChild(featureName);
+            div.appendChild(featureDiv);
+            div.appendChild(removeButton);
+            form.appendChild(div);
+        });
+
+
+
+    }, [product]);
 
     useEffect(() => {
         // console.log(imagesBase64);
@@ -34,28 +86,21 @@ export default function ChangeProductForm({ products, url }) {
         console.log(`features: ${features}`);
     }, [features]);
 
-    // const handleSelect = (event) => {
-    //     let images = [];
-    //     let imagesB64 = [];
-    //     let files = event.target.files;
-
-    //     for (let i = 0; i < files.length; i++) {
-    //         images.push(URL.createObjectURL(files[i]));
-    //     }
-
-    //     for (let i = 0; i < files.length; i++) {
-    //         imageToBase64(images[i])
-    //             .then(responce => imagesB64.push(responce))
-    //             .catch(error => console.log(error));
-    //     };
-
-    //     setImagesBase64(imagesB64);
-    // };
-
     const removeNode = (event) => {
         event.preventDefault();
         const currentNode = event.target;
         currentNode.parentElement.remove();
+    };
+
+    const splitFeatures = (features) => {
+        const _features = [];
+        for (let i = 0; i < features.length; i++) {
+            const feature = features[i].split("____");
+            const featureValue = feature[0];
+            const featureName = feature[1];
+            _features.push({ featureName, featureValue });
+        }
+        return _features;
     };
 
     const handleAddFeature = (event) => {
