@@ -238,7 +238,7 @@ export default function Store({ data }) {
                                                 <div className="col-md-4 col-xs-6">
                                                     {
                                                         <ProductCart
-                                                            image={`data:image/jpeg;base64,${item.image}`}
+                                                            image={`${item.image}`}
                                                             isNew={item.isNew}
                                                             isSale={item.isSale}
                                                             sale={item.sale}
