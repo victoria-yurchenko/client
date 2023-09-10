@@ -100,18 +100,18 @@ export default function Product({ products }) {
                                     <div className="slides-container" id="slides-container">
                                         {
                                             product.pictures.map(p =>
-                                                <div className="slide" key={p}>
+                                                <div className="slide" key={p} style={{ marginTop: '100px' }}>
                                                     <img src={p} alt="" />
                                                 </div>
                                             )
                                         }
                                     </div>
-                                    <i className="slide-arrow" id="slide-arrow-prev" onClick={handleClickPrevious}>
+                                    {/* <i className="slide-arrow" id="slide-arrow-prev" onClick={handleClickPrevious}>
                                         <Icon icon='fa:arrow-left' style={{ backgroundColor: 'white', borderRadius: '5px' }} />
                                     </i>
                                     <i className="slide-arrow" id="slide-arrow-next" onClick={handleClickNext}>
                                         <Icon icon='fa:arrow-right' style={{ backgroundColor: 'white', borderRadius: '5px' }} />
-                                    </i>
+                                    </i> */}
                                 </div>
                             </div>
 
@@ -119,27 +119,27 @@ export default function Product({ products }) {
                                 <div className="product-details">
                                     <h2 className="product-name">{product.productName}</h2>
                                     <div>
-                                        <div className="product-rating">
+                                        {/* <div className="product-rating">
                                             <i><Icon icon='fa:star' /></i>
                                             <i><Icon icon='fa:star' /></i>
                                             <i><Icon icon='fa:star' /></i>
                                             <i><Icon icon='fa:star' /></i>
                                             <i><Icon icon='fa:star-o' /></i>
                                         </div>
-                                        <a className="review-link" href="#">10 Review(s) | Add your review</a>
+                                        <a className="review-link" href="#">10 Review(s) | Add your review</a> */}
                                     </div>
                                     <div>
-                                        <h3 className="product-price">${
-                                            product.price - product.price * product.salePricePercent / 100
-                                        } <del className="product-old-price">${product.price}</del></h3>
+                                        <h3 className="product-price">${product.newPrice}
+                                            <del className="product-old-price" style={{ marginLeft: '20px' }}>${product.oldPrice} </del>
+                                        </h3>
                                         {
                                             product.countOnStock > 0
                                                 ? <span className="product-available">In Stock</span>
                                                 : <span className="product-available">Saled!</span>
                                         }
-                                        
+
                                     </div>
-                                    <p>{product.description}</p>
+                                    <p>{product.shortDescription}</p>
                                     <div className="add-to-cart">
                                         {/* <div className="qty-label">
                                     Qty
@@ -153,33 +153,30 @@ export default function Product({ products }) {
                                     </div>
 
                                     <ul className="product-btns">
-                                        <li><a href="#"><i><Icon icon='fa:heart-o' /></i> add to wishlist</a></li>
-                                        <li><a href="#"><i><Icon icon='fa:exchange' /></i> add to compare</a></li>
+                                        <li><a href="" className="nav-link nav-text" style={{ textDecoration: 'none' }} ><i><Icon icon='fa:heart-o' /></i> add to wishlist</a></li>
                                     </ul>
 
                                     <ul className="product-links">
                                         <li>Category:</li>
                                         {
                                             product.categories.map(c =>
-                                                <li><a href="#">{c}</a></li>
+                                                <li><a href="#" className="nav-link nav-text" style={{ textDecoration: 'none' }} >{c}</a></li>
                                             )
                                         }
                                     </ul>
 
                                     <ul className="product-links">
                                         <li>Share:</li>
-                                        <li><a href="#"><i><Icon icon='fa:facebook' /></i></a></li>
-                                        <li><a href="#"><i><Icon icon='fa:twitter' /></i></a></li>
-                                        <li><a href="#"><i><Icon icon='fa:google-plus' /></i></a></li>
-                                        <li><a href="#"><i><Icon icon='fa:envelope' /></i></a></li>
+                                        <li><a style={{ textDecoration: 'none' }} ><i><Icon icon='fa:facebook' /></i></a></li>
+                                        <li><a style={{ textDecoration: 'none' }} ><i><Icon icon='fa:twitter' /></i></a></li>
+                                        <li><a style={{ textDecoration: 'none' }} ><i><Icon icon='fa:google-plus' /></i></a></li>
+                                        <li><a style={{ textDecoration: 'none' }} ><i><Icon icon='fa:envelope' /></i></a></li>
                                     </ul>
 
                                 </div>
                             </div>
 
                             <div className="col-md-12">
-
-
                                 <div id="product-tab">
                                     <ul className="tab-nav">
                                         <li className="active">

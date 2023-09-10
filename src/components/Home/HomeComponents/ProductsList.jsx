@@ -1,98 +1,83 @@
-import React from 'react';
 import Slider from 'react-slick';
 import ProductCart from '../../HelperComponents/ProductCart';
+import { useState } from 'react';
+import { useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 
 
-export default function ProductsList() {
+export default function ProductsList({ products }) {
 
-    var mediaQueryList = window.matchMedia('(min-width: 729px)');
-
-    const settings = {
+    const [settings, setSettings] = useState({
         dots: true,
         infinite: true,
         speed: 1000,
-        slidesToShow: 4, //count depends on screen size
-        slidesToScroll: 1,
+        slidesToShow: 1,    //count depends on screen size
+        slidesToScroll: 1,  //count depends on screen size
         autoplay: true,
         autoplaySpeed: 6000,
-    };
+    });
 
-    const products = [
-        {
-            image: 'https://img.kytary.com/eshop_ie/velky_v2/na/637587725633400000/a86485b6/64867053/jet-guitars-js-300-sfg.jpg',
-            isNew: true,
-            isSale: true,
-            sale: 20,
-            category: 'Guitars',
-            productName: 'Fender Stratocaster',
-            price: 1200
-        },
-        {
-            image: 'https://img.kytary.com/eshop_ie/velky_v2/na/637587725633400000/a86485b6/64867053/jet-guitars-js-300-sfg.jpg',
-            isNew: true,
-            isSale: true,
-            sale: 20,
-            category: 'Guitars',
-            productName: 'Fender Stratocaster',
-            price: 1200
-        },
-        {
-            image: 'https://img.kytary.com/eshop_ie/velky_v2/na/637587725633400000/a86485b6/64867053/jet-guitars-js-300-sfg.jpg',
-            isNew: true,
-            isSale: true,
-            sale: 20,
-            category: 'Guitars',
-            productName: 'Fender Stratocaster',
-            price: 1200
-        },
-        {
-            image: 'https://img.kytary.com/eshop_ie/velky_v2/na/637587725633400000/a86485b6/64867053/jet-guitars-js-300-sfg.jpg',
-            isNew: true,
-            isSale: true,
-            sale: 20,
-            category: 'Guitars',
-            productName: 'Fender Stratocaster',
-            price: 1200
-        },
-        {
-            image: 'https://img.kytary.com/eshop_ie/velky_v2/na/637587725633400000/a86485b6/64867053/jet-guitars-js-300-sfg.jpg',
-            isNew: true,
-            isSale: true,
-            sale: 20,
-            category: 'Guitars',
-            productName: 'Fender Stratocaster',
-            price: 1200
-        },
-        {
-            image: 'https://img.kytary.com/eshop_ie/velky_v2/na/637587725633400000/a86485b6/64867053/jet-guitars-js-300-sfg.jpg',
-            isNew: true,
-            isSale: true,
-            sale: 20,
-            category: 'Guitars',
-            productName: 'Fender Stratocaster',
-            price: 1200
+    function useWindowSize() {
+
+        const [size, setSize] = useState([0, 0]);
+        useLayoutEffect(() => {
+            function updateSize() {
+                setSize([window.innerWidth, window.innerHeight]);
+            }
+            window.addEventListener('resize', updateSize);
+            updateSize();
+            console.log(products)
+            return () => window.removeEventListener('resize', updateSize);
+        }, []);
+        return size;
+    }
+
+    function SetWindowDimensions(props) {
+        const [width, height] = useWindowSize();
+        let slidesToShow = 0;
+        if (width < 768) {
+            slidesToShow = 1;
         }
-    ];
+        else if (width < 992) {
+            slidesToShow = 3;
+        }
+        else if (width < 1200) {
+            slidesToShow = 4;
+        }
+        else {
+            slidesToShow = 5;
+        }
+        let settingsTemp = settings;
+        settingsTemp.slidesToShow = slidesToShow;
+    }
 
     return (
-        <div className="products-slick">
-            <Slider {...settings}>
-                {
-                    products.map(
-                        (item, index) =>
-                            <ProductCart 
-                                key={index}
-                                image={item.image}
-                                isNew={item.isNew}
-                                isSale={item.isSale}
-                                sale={item.sale}
-                                category={item.category}
-                                productName={item.productName}
-                                price={item.price}
-                            />
-                    )
-                }
-            </Slider>
-        </div>
+        <>
+            {
+                products == null
+                    ?
+                    <></>
+                    :
+                    <div className="products-slick">
+                        {SetWindowDimensions()}
+                        <Slider {...settings}>
+                            {
+                                products.map(
+                                    (item, index) =>
+                                        <ProductCart
+                                            key={index}
+                                            image={item.image}
+                                            isNew={item.isNew}
+                                            isSale={item.isSale}
+                                            sale={item.sale}
+                                            category={item.category}
+                                            productName={item.productName}
+                                            price={item.newPrice}
+                                        />
+                                )
+                            }
+                        </Slider>
+                    </div>}
+        </>
     )
 }

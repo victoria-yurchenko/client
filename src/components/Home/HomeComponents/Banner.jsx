@@ -7,17 +7,17 @@ export default function Banner() {
         {
             imageUrl: 'https://img.kytary.com/eshop_ie/velky_v2/na/637587725633400000/a86485b6/64867053/jet-guitars-js-300-sfg.jpg',
             productName: 'Guitar',
-            catalogueLink: '#',
+            catalogueLink: 'http://localhost:3000/store/Guitar/categoryonly/categoryonly'
         },
         {
             imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRagUM4AYdNCGq9DqVKx_ZImkgIafBsNZBU7Q&usqp=CAU',
             productName: 'Piano',
-            catalogueLink: '#',
+            catalogueLink: "http://localhost:3000/store/Piano/categoryonly/categoryonly"
         },
         {
             imageUrl: 'https://www.drumbazar.net/media/catalog/product/cache/52836d5eb74e48d409889e4eb0cae335/s/1/s13h30_main_1.jpg',
             productName: 'Percussion',
-            catalogueLink: '#',
+            catalogueLink: "http://localhost:3000/store/Percussion/categoryonly/categoryonly"
         }
     ];
 

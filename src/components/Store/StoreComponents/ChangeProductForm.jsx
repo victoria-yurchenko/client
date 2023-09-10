@@ -154,7 +154,9 @@ export default function ChangeProductForm({ products, url }) {
             .catch(error => console.log(error));
     };
 
-    const handleDeleteProduct = () => {
+    const handleDeleteProduct = (event) => {
+        event.preventDefault();
+        console.log(product.productId);
         window.location.replace(`http://localhost:3000/product/delete/${product.productId}`);
     }
 

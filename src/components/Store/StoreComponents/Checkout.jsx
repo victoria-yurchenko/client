@@ -88,7 +88,13 @@ export default function Checkout() {
             body: JSON.stringify(orderDBO)
         };
         fetch('http://localhost:5089/api/maestro/submitorder', options)
-            .then(response => console.log(response))
+            .then(response => response.json()
+                .then(data => {
+                    console.log(data);
+                    localStorage.setItem(`orderId`, data.id);
+                    window.location.replace(`http://localhost:3000/orderafterconfirm`);
+                })
+            )
             .catch(error => console.log(error));
     };
 

@@ -26,42 +26,19 @@ function App() {
 
   return (
     <div >
-
       <Header />
-
       {
         data != null
           ? <AppRouter data={data} />
           : <></>
 
       }
-
-      {/* <BreadCrumb /> */}
-      {/* <Product/> */}
-      {/* product */}
-
-      {/* HOME_PAGE */}
-      {/* <Home /> */}
-      {/* HOME_PAGE */}
-
-      {/* <Checkout /> */}
-
-      {/* {
-        data != null
-          ? <Store data={data} />
-          : <div style={{display:'none'}}></div>
-          
-      } */}
-
       <NewsLetter />
       <Footer />
-      {/* <div className='screen-container'>
-        <Screen />
-        Now under wanetd
-        <CatalogueItem/>
-      </div> */}
     </div>
   );
 }
 
 export default App;
+
+// TODO: Search, wishlist, update, hotdeals, track order

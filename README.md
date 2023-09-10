@@ -1,5 +1,6 @@
 npm install react-image-zoom --save
 npm install react-bootstrap bootstrap
+npm install react-cropper
 
 
 # Getting Started with Create React App

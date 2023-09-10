@@ -18,7 +18,7 @@ export default function Account({ user }) {
     };
 
     const handleOrders = () => {
-
+        window.location.replace(`http://localhost:3000/orders`);
     };
 
     const handleDeleteAccount = () => {
@@ -54,6 +54,17 @@ export default function Account({ user }) {
                     <a style={{ textDecoration: 'none', color: 'black' }}>
                         <i><Icon icon="fa:history" style={{ marginRight: '10px' }} /></i>
                         <span>Previous Orders</span>
+                    </a>
+                </div>
+                <div className="col-1">
+                    <i><Icon icon="fa:arrow-right" style={{ marginRight: '10px' }} /></i>
+                </div>
+            </div>
+            <div className="row" style={{ backgroundColor: '#e0e0e0', height: '4vh', borderRadius: '5px', marginTop: '10px', cursor: 'pointer'  }}>
+                <div className="col-11">
+                    <a style={{ textDecoration: 'none', color: 'black' }}>
+                        <i><Icon icon="fa:bolt" style={{ marginRight: '10px' }} /></i>
+                        <span>Track Order</span>
                     </a>
                 </div>
                 <div className="col-1">

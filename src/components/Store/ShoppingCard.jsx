@@ -26,11 +26,27 @@ export default function ShoppingCard() {
         window.location.replace(`http://localhost:3000/checkout`);
     };
 
+    const handleSubmit = () => {
+        window.location.replace(`http://localhost:3000/store`);
+    };
+
     return (
         <div className="container">
             {
-                products == null
-                    ? <></>
+                products == null || products.length == 0
+                    ?
+                    <>
+                        <h4 style={{ marginTop: '50px' }}>Your card is empty, it is time to fix this!</h4>
+                        <a
+                            href="#"
+                            type='submit'
+                            className="primary-btn order-submit"
+                            style={{ textDecoration: 'none', marginTop: '50px' }}
+                            onClick={handleSubmit}
+                        >
+                            Shop Now
+                        </a>
+                    </>
                     :
                     <>
 

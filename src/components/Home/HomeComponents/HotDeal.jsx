@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function HotDeal() {
   return (
-    <div id="hot-deal" className="section">
+    <div id="hot-deal" className="section" style={{marginTop: '100px'}}>
 			<div className="container">
 				<div className="row">
 					<div className="col-md-12">

@@ -14,6 +14,8 @@ import Registration from '../Account/Registration';
 import UserPage from '../Account/Account';
 import ShoppingCard from '../Store/ShoppingCard';
 import DeleteAccount from '../Account/DeleteAccount';
+import Orders from '../Account/Orders';
+import OrderAfterConfirm from '../Store/StoreComponents/OrderAfterConfirm';
 
 export default function AppRouter({ url, data }) {
 
@@ -62,11 +64,15 @@ export default function AppRouter({ url, data }) {
                 <Route path='/' element={<Home />} />
                 <Route path='/login' element={<Login />} />
                 <Route path='/myaccount' element={<UserPage />} />
+                <Route path='/orders' element={<Orders />} />
                 <Route path='/registration' element={<Registration />} />
                 <Route path='/deleteaccount' element={<DeleteAccount />} />
+                <Route path='/orderafterconfirm' element={<OrderAfterConfirm />} />
                 <Route path='/checkout' element={<Checkout />} />
                 <Route path='/store' element={<Store data={data} />} />
-                <Route path='/guitars' element={<Store data={data} />} />
+                <Route path='/store/:category/:categoryonly/categoryonly' element={<Store data={data} />} />
+                <Route path='/store/:query/:queryonly/queryonly/queryonly' element={<Store data={data} />} />
+                <Route path='/store/:category/:query' element={<Store data={data} />} />
                 <Route path='/addnew' element={<AddProductForm url={url} data={data} />} />
                 <Route path='/product/:id' element={<Product products={data.productsDBO} />} />
                 <Route path='/changeproduct/:id' element={<ChangeProductForm url={url} />} />

@@ -31,21 +31,21 @@ export default function ProductCart({
     };
 
     const handleAddToCard = () => {
-     if (localStorage.getItem('UserLoggedId') != null) { // the user is logged
-        const addToCard = {
-            userId: localStorage.getItem('UserLoggedId'),
-            productId: productId
+        if (localStorage.getItem('UserLoggedId') != null) { // the user is logged
+            const addToCard = {
+                userId: localStorage.getItem('UserLoggedId'),
+                productId: productId
+            }
+            const options = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json; charset=utf-8' },
+                body: JSON.stringify(addToCard)
+            };
+            fetch('http://localhost:5089/api/maestro/addtocard', options)
+                .then(response => console.log(response))
+                .catch(error => console.log(error));
         }
-        const options = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json; charset=utf-8' },
-            body: JSON.stringify(addToCard)
-        };
-        fetch('http://localhost:5089/api/maestro/addtocard', options)
-            .then(response => console.log(response))
-            .catch(error => console.log(error));
-     }   
-     else console.log(0)
+        else console.log(0)
     }
 
     return (
@@ -55,7 +55,7 @@ export default function ProductCart({
                 <div className="product-label">
                     {
                         newPrice < oldPrice
-                            ? <span className="sale">{newPrice}</span>
+                            ? <span className="sale">-{oldPrice - newPrice} $</span>
                             : <></>
                     }
                     {
@@ -66,19 +66,21 @@ export default function ProductCart({
                     {
                         isNew //isAdmin here
                             ?
-                            <a className="new btn" style={{ marginLeft: '10px', border: '2px solid #D10024', borderRadius: 1, backgroundColor: '#FFF' }} >
-                                <label style={{ cursor: 'pointer' }} onClick={handleOnChange}><Icon icon={'fa:cog'} style={{ marginRight: '10px' }} />Change</label>
-
-                            </a>
+                            <div>
+                                <a className="new btn" style={{ marginLeft: '10px', border: '2px solid #D10024', borderRadius: 4, backgroundColor: '#FFF', marginTop: '20px' }} >
+                                    <label style={{ cursor: 'pointer' }} onClick={handleOnChange}><Icon icon={'fa:cog'} style={{ marginRight: '10px' }} />Change</label>
+                                </a>
+                            </div>
                             : <></>
                     }
                     {
                         isNew //isAdmin here
                             ?
-                            <a className="new btn" style={{ marginLeft: '10px', border: '2px solid #D10024', borderRadius: 1, backgroundColor: '#FFF' }} >
-                                <label style={{ cursor: 'pointer' }} onClick={handleOnDelete}><Icon icon={'fa:trash'} style={{ marginRight: '10px' }} />Delete</label>
-
-                            </a>
+                            <div>
+                                <a className="new btn" style={{ marginLeft: '10px', border: '2px solid #D10024', borderRadius: 4, backgroundColor: '#FFF', marginTop: '10px'}} >
+                                    <label style={{ cursor: 'pointer' }} onClick={handleOnDelete}><Icon icon={'fa:trash'} style={{ marginRight: '10px' }} />Delete</label>
+                                </a>
+                            </div>
                             : <></>
                     }
 

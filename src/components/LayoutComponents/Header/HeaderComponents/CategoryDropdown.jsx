@@ -21,9 +21,6 @@ export default function CategoryDropdown() {
                 <NavDropdown.Item style={{backgroundColor: '#ececee'}} onMouseEnter={handleEnter} onMouseLeave={handleLeave} href="/store">All</NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item style={{backgroundColor: '#ececee'}} onMouseEnter={handleEnter} onMouseLeave={handleLeave} href="/guitars">Guitars</NavDropdown.Item>
-                <NavDropdown.Item></NavDropdown.Item>
-                <NavDropdown.Item href="/store">Electro Guitars</NavDropdown.Item>
-                <NavDropdown.Item href="/store">Acoustic Guitars</NavDropdown.Item>
                 <NavDropdown.Item style={{backgroundColor: '#ececee'}} onMouseEnter={handleEnter} onMouseLeave={handleLeave} href="/store">Pianos</NavDropdown.Item>
                 <NavDropdown.Item style={{backgroundColor: '#ececee'}} onMouseEnter={handleEnter} onMouseLeave={handleLeave} href="/store">Accessories</NavDropdown.Item>
                 <NavDropdown.Divider />
