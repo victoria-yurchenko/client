@@ -479,7 +479,8 @@ textarea.input {
 }
 
 .header-search form .search-btn {
-  height: 40px;
+  height:40px;
+  padding-top: 2px;
   width: 100px;
   background: #D10024;
   color: #FFF;
@@ -690,6 +691,9 @@ textarea.input {
     -ms-transform: translateX(0%);
     transform: translateX(0%);
     width: 100%;
+    background-color: rgb(246, 246, 246) !important;
+    border-right: 2px solid #15161D !important;
+    box-shadow: #282936 10px 0px 60px 8px;
   }
   .main-nav {
     margin: 0px;

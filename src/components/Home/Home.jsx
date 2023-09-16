@@ -1,7 +1,7 @@
 import React from 'react';
 import Banner from './HomeComponents/Banner';
 import HotDeal from './HomeComponents/HotDeal';
-import SliderSection from './HomeComponents/SliderSection';
+import SliderSection from '../HelperComponents/SliderSection';
 import { useEffect } from 'react';
 import { useState } from 'react';
 
@@ -29,12 +29,12 @@ export default function Home() {
                         <Banner />
                         <SliderSection
                             title='New Products'
-                            products={products.filter(product => product.isNew)}
+                            products={products.filter(product => product.isNew).slice(0, 6)}
                         />
                         <HotDeal />
                         <SliderSection
                             title='Top Selling'
-                            products={products.slice(0, 9)}
+                            products={products.slice(0, 6)}
                         />
                     </div>
             }

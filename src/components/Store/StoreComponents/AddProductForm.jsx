@@ -6,7 +6,6 @@ import { useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 
 export default function AddProductForm({ url, data }) {
-
     const [imagesBase64, setImagesBase64] = useState([]);
     const [categories, setCategories] = useState(data.categories);
     const [features, setFeatures] = useState([]);
@@ -93,11 +92,14 @@ export default function AddProductForm({ url, data }) {
         console.log(featuresValues);
         const toSend = [];
 
-        for (let i = 0; i < featuresNames.length; i++) {
-            const featureToSend = `${featuresNames[i].value}${separator}${featuresValues[i].value}`;
-            toSend.push(featureToSend);
+        if (featuresNames !== undefined) {
+            for (let i = 0; i < featuresNames.length; i++) {
+                const featureToSend = `${featuresNames[i].value}${separator}${featuresValues[i].value}`;
+                toSend.push(featureToSend);
+            }
+            setFeatures(toSend);
         }
-        setFeatures(toSend);
+        return toSend;
     };
 
     const handleSelectCategory = (event) => {
@@ -108,8 +110,6 @@ export default function AddProductForm({ url, data }) {
     };
 
     const handleSubmit = (event) => {
-        collectFeatures();
-
         const _productName = document.getElementById('feature-name-id').value;
         const _categories = selectedCategories;
         const _price = document.getElementById('feature-price-id').value;
@@ -117,7 +117,7 @@ export default function AddProductForm({ url, data }) {
         const _countOnStock = document.getElementById('feature-stock-count-id').value;
         const _shortDescription = document.getElementById('feature-short-description-id').value;
         const _pictures = imagesBase64;
-        const _features = features;
+        const _features = collectFeatures();
 
         let product = {
             productName: _productName,
@@ -136,8 +136,16 @@ export default function AddProductForm({ url, data }) {
             body: JSON.stringify(product)
         };
         fetch('http://localhost:5089/api/maestro', options)
-            .then(response => console.log(response))
+            .then(response =>
+                response.json()
+                    .then(data => {
+                        console.log(data);
+                        window.location.replace(`http://localhost:3000/product/${data.id}`);
+                    })
+            )
             .catch(error => console.log(error));
+
+
     };
 
     return (

@@ -1,4 +1,4 @@
-import { Icon } from '@iconify/react';
+import { Icon, InlineIcon } from '@iconify/react';
 import React, { useEffect, useState } from 'react'
 
 export default function ShoppingCard() {
@@ -16,7 +16,7 @@ export default function ShoppingCard() {
                 setProducts(data);
                 console.log(localStorage.getItem('UserLoggedId'))
                 let total = 0;
-                data.map(item => total += item.newPrice);
+                data.map(item => total += item.product.newPrice);
                 setTotalPrice(total);
             }))
             .catch(error => console.log(error));
@@ -28,6 +28,25 @@ export default function ShoppingCard() {
 
     const handleSubmit = () => {
         window.location.replace(`http://localhost:3000/store`);
+    };
+
+    const handleRemoveFromCard = (productId) => {
+        console.log(productId);
+        console.log(localStorage.getItem('UserLoggedId'));
+        const addToCard = {
+            userId: localStorage.getItem('UserLoggedId'),
+            productId: productId
+        }
+        console.log(addToCard);
+        const options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=utf-8' },
+            body: JSON.stringify(addToCard)
+        };
+        fetch('http://localhost:5089/api/maestro/removefromcard', options)
+            .then(response => console.log(response))
+            .catch(error => console.log(error));
+        window.location.reload();
     };
 
     return (
@@ -52,48 +71,54 @@ export default function ShoppingCard() {
 
                         <div className="order-summary">
                             <div className="order-col">
-                                <div><strong>PRODUCT</strong></div>
-                                <div><strong>TOTAL</strong></div>
+                                <div></div>
+                                <div></div>
                             </div>
                             <div className="order-products">
-
                                 {
                                     products.map(p =>
-                                        // <div className="row" key={p.id}
-                                        //     style={{ backgroundColor: '#e0e0e0', height: '4vh', borderRadius: '5px', marginTop: '20px', fontWeight: 600 }}
-                                        // >
-                                        //     <div className="col-2">
-                                        //         image
-                                        //     </div>
-                                        //     <div className="col-8">
-                                        //         {p.name}
-                                        //     </div>
-                                        //     <div className="col-1">
-                                        //         {p.newPrice}
-                                        //     </div>
-                                        //     <div className="col-1">
-                                        //         <i><Icon icon="fa:trash" style={{ marginRight: '10px' }} /></i>
-                                        //     </div>
-                                        // </div>
-                                        <div className="order-col">
-                                            <div>1x {p.name}</div>
-                                            <div>${p.newPrice}</div>
+                                        <div className="row" style={{ margin: '30px' }}>
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%"></th>
+                                                        <th width="5%"></th>
+                                                        <th width="85%"></th>
+                                                        <th width="5%"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <i style={{ cursor: 'pointer' }} onClick={() => {handleRemoveFromCard (p.product.id)}}><Icon icon="fa:minus" /></i>
+                                                        </td>
+                                                        <td>
+                                                            <img src={`data:image/jpeg;base64,${p.image}`} height={100} alt='product image' />
+                                                        </td>
+                                                        <td>
+                                                            <label>{p.product.name}</label>
+                                                        </td>
+                                                        <td>
+                                                            <label>${p.product.newPrice}</label>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     )
                                 }
-
                             </div>
-                            <div className="order-col">
+                            {/* <div className="order-col">
                                 <div>Shiping</div>
                                 <div><strong>FREE</strong></div>
-                            </div>
-                            <div className="order-col">
+                            </div> */}
+                            <div className="order-col" style={{ marginTop: '100px' }}>
                                 <div><strong>TOTAL</strong></div>
                                 <div><strong className="order-total">${totalPrice}</strong></div>
                             </div>
                         </div>
                         <hr style={{ marginTop: '25px', marginBottom: '50px' }} />
-                        <a href="#" onClick={handlePlaceOrder} className="primary-btn order-submit" style={{ outline: 'none' }}>Place order</a>
+                        <a href="#" onClick={handlePlaceOrder} className="primary-btn order-submit" style={{ outline: 'none', textDecoration: 'none' }}>Place order</a>
                     </>
             }
         </div>

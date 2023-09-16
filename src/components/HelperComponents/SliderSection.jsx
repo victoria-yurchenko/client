@@ -1,6 +1,6 @@
 import React from 'react';
-import TabNavigation from './TabNavigation';
-import ProductsList from './ProductsList';
+import TabNavigation from '../Home/HomeComponents/TabNavigation';
+import ProductsList from '../Home/HomeComponents/ProductsList';
 
 export default function SliderSection({title, products}) {
     return (

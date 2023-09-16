@@ -13,12 +13,37 @@ export default function ProductCart({
     productName,
     oldPrice,
     isAdminSession,
-    productId
+    productId,
+    isInWishlistByDefault
 }) {
 
+    const [isRemove, setIsRemove] = useState(false);
+    const [isLogged, setIsLogged] = useState(false);
+    const [isInWishlist, setIsInWishlist] = useState(false);
+    const [isPageLoaded, setIsPageLoaded] = useState(false);
+
     useEffect(() => {
-        // console.log(image)
-    })
+        if (localStorage.getItem('UserLoggedId') > 0) { // the user is logged
+            setIsLogged(true);
+            const product = {
+                userId: localStorage.getItem('UserLoggedId'),
+                productId: productId
+            }
+            const options = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json; charset=utf-8' },
+                body: JSON.stringify(product),
+            };
+            if (!isPageLoaded) {
+                fetch('http://localhost:5089/api/maestro/isincard', options)
+                    .then(responce => responce.json().then(data => {
+                        setIsRemove(data);
+                    }))
+                    .catch(error => console.log(error));
+                setIsPageLoaded(false);
+            }
+        }
+    }, []);
     // const [selectedProductId, setSelectedProductId] = useState(0);
 
     const handleOnChange = () => {
@@ -29,11 +54,63 @@ export default function ProductCart({
         window.location.replace(`http://localhost:3000/product/${productId}`);
     };
 
+    const handleAddToWishlist = () => {
+        const addToCard = {
+            userId: localStorage.getItem('UserLoggedId'),
+            productId: productId
+        }
+        const options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=utf-8' },
+            body: JSON.stringify(addToCard)
+        };
+        fetch('http://localhost:5089/api/maestro/addtowishlist', options)
+            .then(response => console.log(response))
+            .catch(error => console.log(error));
+        setIsInWishlist(!isInWishlist);
+    };
+
+    const handleRemoveFromWishlist = () => {
+        const removeFromCard = {
+            userId: localStorage.getItem('UserLoggedId'),
+            productId: productId
+        }
+        const options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=utf-8' },
+            body: JSON.stringify(removeFromCard)
+        };
+        fetch('http://localhost:5089/api/maestro/removefromwishlist', options)
+           .then(response => console.log(response))
+           .catch(error => console.log(error));
+        setIsInWishlist(!isInWishlist);
+        if (isInWishlistByDefault) 
+            window.location.reload();
+    };
+
     const handleOnDelete = () => {
         window.location.replace(`http://localhost:3000/product/delete/${productId}`);
     };
 
     const handleAddToCard = () => {
+
+        const addToCard = {
+            userId: localStorage.getItem('UserLoggedId'),
+            productId: productId
+        }
+        const options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=utf-8' },
+            body: JSON.stringify(addToCard)
+        };
+        fetch('http://localhost:5089/api/maestro/addtocard', options)
+            .then(response => console.log(response))
+            .catch(error => console.log(error));
+        setIsRemove(!isRemove);
+    }
+
+    const handleRemoveFromCard = () => {
+        setIsRemove(!isRemove);
         if (localStorage.getItem('UserLoggedId') != null) { // the user is logged
             const addToCard = {
                 userId: localStorage.getItem('UserLoggedId'),
@@ -44,15 +121,20 @@ export default function ProductCart({
                 headers: { 'Content-Type': 'application/json; charset=utf-8' },
                 body: JSON.stringify(addToCard)
             };
-            fetch('http://localhost:5089/api/maestro/addtocard', options)
+            fetch('http://localhost:5089/api/maestro/removefromcard', options)
                 .then(response => console.log(response))
                 .catch(error => console.log(error));
+
+           
         }
-        else console.log(0)
-    }
+    };
+
+    const handleLoginToBuy = () => {
+        window.location.replace(`http://localhost:3000/login`);
+    };
 
     return (
-        <div className="product m-1">
+        <div className="product m-1" >
             <div className="product-img">
                 <img src={`data:image/jpeg;base64,${image}`} alt="product" />
                 <div className="product-label">
@@ -67,7 +149,7 @@ export default function ProductCart({
                             : <></>
                     }
                     {
-                        isNew //isAdmin here
+                        isAdminSession
                             ?
                             <div>
                                 <a className="new btn" style={{ marginLeft: '10px', border: '2px solid #D10024', borderRadius: 4, backgroundColor: '#FFF', marginTop: '20px' }} >
@@ -77,7 +159,7 @@ export default function ProductCart({
                             : <></>
                     }
                     {
-                        isNew //isAdmin here
+                        isAdminSession
                             ?
                             <div>
                                 <a className="new btn" style={{ marginLeft: '10px', border: '2px solid #D10024', borderRadius: 4, backgroundColor: '#FFF', marginTop: '0px' }} >
@@ -98,7 +180,11 @@ export default function ProductCart({
                             color: 'black'
                         }}
                     >
-                        {productName}
+                        {
+                            productName.length > 18
+                                ? productName.substring(0, 18) + '...'
+                                : productName
+                        }
                     </a>
                 </h3>
                 {
@@ -108,13 +194,39 @@ export default function ProductCart({
 
                 }
                 <div className="product-btns">
-                    <button className="add-to-wishlist"><i><Icon icon='fa:heart-o' /></i><span className="tooltipp">add to wishlist</span></button>
+                    {
+                        isLogged
+                            ?
+                            <span className="product-btns">
+                                {
+                                    !isInWishlist && !isInWishlistByDefault
+                                        ? <button className="add-to-wishlist" onClick={handleAddToWishlist}><i><Icon icon='fa:heart-o' /></i><span className="tooltipp">add to wishlist</span></button>
+                                        : <button className="add-to-wishlist" onClick={handleRemoveFromWishlist}><i><Icon icon="basil:heart-solid" width="28" height="28" /> </i><span className="tooltipp">remove</span></button>
+                                }
+                            </span>
+                            : <></>
+                    }
                     <button className="quick-view" onClick={handleView}><i><Icon icon='fa:eye' /></i><span className="tooltipp">view</span></button>
                 </div>
             </div>
-            <div className="add-to-cart">
-                <button className="add-to-cart-btn" onClick={handleAddToCard}><i><Icon icon='fa:shopping-cart' /></i> add to cart</button>
-            </div>
+            {
+                isLogged
+                    ?
+                    <div className="add-to-cart">
+                        {
+                            !
+                                isRemove
+                                ? <button className="add-to-cart-btn" onClick={handleAddToCard}><i><Icon icon='fa:shopping-cart' /></i> add to cart</button>
+                                : <button className="add-to-cart-btn" onClick={handleRemoveFromCard}><i><Icon icon='fa:trash' /></i> remove</button>
+                        }
+                    </div>
+                    :
+                    <>
+                        <div className="add-to-cart">
+                            <button className="add-to-cart-btn" onClick={handleLoginToBuy}>Login to buy</button>
+                        </div>
+                    </>
+            }
         </div>
     )
 }

@@ -18,11 +18,11 @@ export default function CategoryDropdown() {
     return (
         <>
             <NavDropdown title="Categories" className='nav-link navbar-text main-nav' style={{ fontWeight: '500' }}  >
-                <NavDropdown.Item style={{backgroundColor: '#ececee'}} onMouseEnter={handleEnter} onMouseLeave={handleLeave} href="/store">All</NavDropdown.Item>
+                <NavDropdown.Item onMouseEnter={handleEnter} style={{ backgroundColor: 'white' }} onMouseLeave={handleLeave} href="/store">All</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item style={{backgroundColor: '#ececee'}} onMouseEnter={handleEnter} onMouseLeave={handleLeave} href="/guitars">Guitars</NavDropdown.Item>
-                <NavDropdown.Item style={{backgroundColor: '#ececee'}} onMouseEnter={handleEnter} onMouseLeave={handleLeave} href="/store">Pianos</NavDropdown.Item>
-                <NavDropdown.Item style={{backgroundColor: '#ececee'}} onMouseEnter={handleEnter} onMouseLeave={handleLeave} href="/store">Accessories</NavDropdown.Item>
+                <NavDropdown.Item onMouseEnter={handleEnter} style={{ backgroundColor: 'white' }} onMouseLeave={handleLeave} href="/guitars">Guitars</NavDropdown.Item>
+                <NavDropdown.Item onMouseEnter={handleEnter} style={{ backgroundColor: 'white' }} onMouseLeave={handleLeave} href="/store">Pianos</NavDropdown.Item>
+                <NavDropdown.Item onMouseEnter={handleEnter} style={{ backgroundColor: 'white' }} onMouseLeave={handleLeave} href="/store">Percussion</NavDropdown.Item>
                 <NavDropdown.Divider />
             </NavDropdown>
         </>

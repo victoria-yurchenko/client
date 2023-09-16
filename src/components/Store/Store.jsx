@@ -8,23 +8,18 @@ import { useParams } from 'react-router-dom';
 
 export default function Store({ data }) {
 
+    const [currentUser, setCurrentUser] = useState({});
     const [products, setProducts] = useState(null);
     const params = useParams();
 
     useEffect(() => {
-        console.log(data);
-
         let productsTemp = {
             productsDBO: [],
             categories: [...data.categories]
         };
 
-        console.log(productsTemp);
-
         if (data !== undefined) {
             if (params.category !== undefined && params.query !== undefined) {
-
-
                 data.productsDBO.map(p => {
                     if (p.productName.toLowerCase().includes(params.query.toLowerCase()) && p.category == params.category)
                         productsTemp.productsDBO.push(p);
@@ -49,7 +44,17 @@ export default function Store({ data }) {
             console.log(productsTemp)
             setProducts(productsTemp);
         }
+
+        if (localStorage.getItem('UserLoggedId') > 0) {
+            fetch(`http://localhost:5089/api/users/getuser?userId=${localStorage.getItem('UserLoggedId')}`)
+                .then(responce => responce.json().then(data => setCurrentUser(data)))
+                .catch(error => console.log(error));
+        }
     }, []);
+
+    const handleAddNew = () => {
+        window.location.replace(`http://localhost:3000/addnew`);
+    };
 
 
     const handleFilterByCategory = () => {
@@ -72,7 +77,7 @@ export default function Store({ data }) {
                 setProducts(productsTemp);
             }
         }
-        if (checkedLength == 0) 
+        if (checkedLength == 0)
             setProducts(data);
     };
 
@@ -120,6 +125,10 @@ export default function Store({ data }) {
         }
     };
 
+    const handleAddHotDeal = () => {
+        window.location.replace(`http://localhost:3000/addhotdeal`);
+    };
+
     return (
         <>
             {
@@ -152,7 +161,7 @@ export default function Store({ data }) {
                                         </div>
                                     </div>
 
-                                    <div className="aside" style={{marginBottom: '20px'}}>
+                                    <div className="aside" style={{ marginBottom: '20px' }}>
                                         <h3 className="aside-title">Price</h3>
                                         <div className="price-filter">
                                             <div id="price-slider"></div>
@@ -168,7 +177,40 @@ export default function Store({ data }) {
                                                 <span className="qty-down">-</span>
                                             </div>
                                         </div>
+                                        {
+                                            currentUser.roleId === 1
+                                                ?
+                                                <>
+                                                    <div>
+                                                        <a
+                                                            href="#"
+                                                            type='submit'
+                                                            className="primary-btn order-submit"
+                                                            style={{ textDecoration: 'none', marginTop: '50px', borderRadius: '5px' }}
+                                                            onClick={handleAddNew}
+                                                        >
+                                                            <span style={{ marginRight: '10px' }}>Add New</span>
+                                                            <i><Icon icon='fa:plus' /></i>
+                                                        </a>
+                                                    </div>
+                                                    <div>
+                                                        <a
+                                                            href="#"
+                                                            type='submit'
+                                                            className="primary-btn order-submit"
+                                                            style={{ textDecoration: 'none', marginTop: '50px', borderRadius: '5px' }}
+                                                            onClick={handleAddHotDeal}
+                                                        >
+                                                            <span style={{ marginRight: '10px' }}>Add Hot Deal</span>
+                                                            <i><Icon icon='fa:plus' /></i>
+                                                        </a>
+                                                    </div>
+                                                </>
+                                                : <></>
+                                        }
                                     </div>
+
+
 
                                     {/* <div className="aside">
                                         <h3 className="aside-title">Top selling</h3>
@@ -235,7 +277,7 @@ export default function Store({ data }) {
                                     <div className="row">
                                         {
                                             products.productsDBO.map(item =>
-                                                <div className="col-md-4 col-xs-6">
+                                                <div className="col-lg-4 col-md-6 col-sm-6 col-xs-12">
                                                     {
                                                         <ProductCart
                                                             image={`${item.image}`}
@@ -248,6 +290,8 @@ export default function Store({ data }) {
                                                             productId={item.productId}
                                                             newPrice={item.newPrice}
                                                             oldPrice={item.oldPrice}
+                                                            isAdminSession={currentUser.roleId === 1 ? true : false}
+                                                            isInWishlistByDefault={false}
                                                         />
                                                     }
                                                 </div>

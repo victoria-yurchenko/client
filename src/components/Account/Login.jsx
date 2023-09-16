@@ -4,7 +4,8 @@ export default function Login() {
 
     const [status, setStatus] = useState(200);
 
-    const handleRegisterPage = () => {
+    const handleRegisterPage = (event) => {
+        event.preventDefault();
         window.location.replace(`http://localhost:3000/registration`);
     };
 
@@ -43,10 +44,12 @@ export default function Login() {
                             console.log(data);
                             localStorage.setItem('UserLoggedId', data.id);
                             console.log(localStorage.getItem('UserLoggedId'))
+                            window.location.replace(`http://localhost:3000/store`);
                         })
                         .catch(error => console.log(error));
-                else
-                    console.log("DATA INCORRECT");
+                else {
+                    document.getElementById('validation-text').innerHTML = 'Login or password is incorrect';
+                }
             }
             )
             .catch(error => console.log(error));
@@ -59,10 +62,10 @@ export default function Login() {
                     <div className="col-5">
                         <form className='form-group'>
                             <input
-                                type="text"
+                                type="email"
                                 className="input"
                                 id='login'
-                                placeholder="Login"
+                                placeholder="Email"
                                 style={{ marginBottom: '10px' }}
                             />
                             <input
@@ -87,17 +90,16 @@ export default function Login() {
                             >
                                 Login
                             </a>
-                            <a
-                                type="submit"
-                                className="input"
-                                placeholder="Password"
-
-                                style={{ marginTop: '40px', color: 'black', border: '1px solid black' }}
+                            <button className='input btn btn-sm'
+                                style={{ marginTop: '40px', color: 'black', border: '1px solid black', borderRadius: '5px' }}
                                 onClick={handleRegisterPage}
-                                value='Register'
                             >
-                            </a>
+                                Register
+                            </button>
                         </form>
+                    </div>
+                    <div className="col-7">
+                        <label id='validation-text' style={{ color: '#D10024', fontWeight: 600 }}></label>
                     </div>
                 </div>
             </div>

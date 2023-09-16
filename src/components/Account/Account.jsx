@@ -14,7 +14,7 @@ export default function Account({ user }) {
 
     const handleSignOut = () => {
         localStorage.setItem('UserLoggedId', null);
-        console.log(localStorage.getItem('UserLoggedId'));
+        window.location.replace(`http://localhost:3000/`);
     };
 
     const handleOrders = () => {
@@ -25,9 +25,25 @@ export default function Account({ user }) {
         window.location.replace(`http://localhost:3000/deleteaccount`);
     };
 
+    const handleWishlist = () => {
+        window.location.replace(`http://localhost:3000/wishlist`);
+    };
+
+    const handlePreviousOrders = () => {
+        window.location.replace(`http://localhost:3000/history`);
+    };
+
+    const handleCard = () => {
+        window.location.replace(`http://localhost:3000/card`);
+    };
+
+    const handleTrackOrder = () => {
+        window.location.replace(`http://localhost:3000/ordertrack`);
+    };
+
     return (
         <div className="container" >
-            <div className="row" style={{ backgroundColor: '#e0e0e0', height: '4vh', borderRadius: '5px', marginTop: '20px', cursor: 'pointer'  }}  onClick={handleOrders}>
+            <div className="row" style={{ backgroundColor: '#e0e0e0', height: '4vh', borderRadius: '5px', marginTop: '20px', cursor: 'pointer' }} onClick={handleOrders}>
                 <div className="col-11">
                     <a style={{ textDecoration: 'none', color: 'black' }}>
                         <i><Icon icon="fa:truck" style={{ marginRight: '10px' }} /></i>
@@ -38,7 +54,7 @@ export default function Account({ user }) {
                     <i><Icon icon="fa:arrow-right" style={{ marginRight: '10px' }} /></i>
                 </div>
             </div>
-            <div className="row" style={{ backgroundColor: '#e0e0e0', height: '4vh', borderRadius: '5px', marginTop: '10px', cursor: 'pointer'  }}>
+            <div className="row" style={{ backgroundColor: '#e0e0e0', height: '4vh', borderRadius: '5px', marginTop: '10px', cursor: 'pointer' }} onClick={handleCard}>
                 <div className="col-11">
                     <a style={{ textDecoration: 'none', color: 'black' }}>
                         <i><Icon icon="fa:shopping-cart" style={{ marginRight: '10px' }} /></i>
@@ -49,9 +65,9 @@ export default function Account({ user }) {
                     <i><Icon icon="fa:arrow-right" style={{ marginRight: '10px' }} /></i>
                 </div>
             </div>
-            <div className="row" style={{ backgroundColor: '#e0e0e0', height: '4vh', borderRadius: '5px', marginTop: '10px', cursor: 'pointer'  }}>
+            <div className="row" style={{ backgroundColor: '#e0e0e0', height: '4vh', borderRadius: '5px', marginTop: '10px', cursor: 'pointer' }}>
                 <div className="col-11">
-                    <a style={{ textDecoration: 'none', color: 'black' }}>
+                    <a style={{ textDecoration: 'none', color: 'black' }} onClick={handlePreviousOrders}>
                         <i><Icon icon="fa:history" style={{ marginRight: '10px' }} /></i>
                         <span>Previous Orders</span>
                     </a>
@@ -60,9 +76,11 @@ export default function Account({ user }) {
                     <i><Icon icon="fa:arrow-right" style={{ marginRight: '10px' }} /></i>
                 </div>
             </div>
-            <div className="row" style={{ backgroundColor: '#e0e0e0', height: '4vh', borderRadius: '5px', marginTop: '10px', cursor: 'pointer'  }}>
+            <div className="row" style={{ backgroundColor: '#e0e0e0', height: '4vh', borderRadius: '5px', marginTop: '10px', cursor: 'pointer' }}>
                 <div className="col-11">
-                    <a style={{ textDecoration: 'none', color: 'black' }}>
+                    <a style={{ textDecoration: 'none', color: 'black' }}
+                        onClick={handleTrackOrder}
+                    >
                         <i><Icon icon="fa:bolt" style={{ marginRight: '10px' }} /></i>
                         <span>Track Order</span>
                     </a>
@@ -71,7 +89,7 @@ export default function Account({ user }) {
                     <i><Icon icon="fa:arrow-right" style={{ marginRight: '10px' }} /></i>
                 </div>
             </div>
-            <div className="row" style={{ backgroundColor: '#e0e0e0', height: '4vh', borderRadius: '5px', marginTop: '10px', cursor: 'pointer'  }}>
+            <div className="row" style={{ backgroundColor: '#e0e0e0', height: '4vh', borderRadius: '5px', marginTop: '10px', cursor: 'pointer' }} onClick={handleWishlist}>
                 <div className="col-11">
                     <a style={{ textDecoration: 'none', color: 'black' }} >
                         <i><Icon icon="fa:heart-o" style={{ marginRight: '10px' }} /></i>
@@ -82,7 +100,7 @@ export default function Account({ user }) {
                     <i><Icon icon="fa:arrow-right" style={{ marginRight: '10px' }} /></i>
                 </div>
             </div>
-            <div className="row" style={{ backgroundColor: '#e0e0e0', height: '4vh', borderRadius: '5px', marginTop: '10px', cursor: 'pointer'  }}>
+            <div className="row" style={{ backgroundColor: '#e0e0e0', height: '4vh', borderRadius: '5px', marginTop: '10px', cursor: 'pointer' }}>
                 <div className="col-11">
                     <a style={{ textDecoration: 'none', color: 'black' }} >
                         <i><Icon icon="fa:cog" style={{ marginRight: '10px' }} /></i>
@@ -93,7 +111,7 @@ export default function Account({ user }) {
                     <i><Icon icon="fa:arrow-right" style={{ marginRight: '10px' }} /></i>
                 </div>
             </div>
-            <div className="row" style={{ backgroundColor: '#e0e0e0', height: '4vh', borderRadius: '5px', marginTop: '10px', cursor: 'pointer'  }} onClick={handleDeleteAccount}>
+            <div className="row" style={{ backgroundColor: '#e0e0e0', height: '4vh', borderRadius: '5px', marginTop: '10px', cursor: 'pointer' }} onClick={handleDeleteAccount}>
                 <div className="col-11">
                     <a style={{ textDecoration: 'none', color: 'black' }} >
                         <i><Icon icon="fa:trash" style={{ marginRight: '10px' }} /></i>
@@ -104,7 +122,7 @@ export default function Account({ user }) {
                     <i><Icon icon="fa:arrow-right" style={{ marginRight: '10px' }} /></i>
                 </div>
             </div>
-            <div className="row" style={{ backgroundColor: '#e0e0e0', height: '4vh', borderRadius: '5px', marginTop: '10px', cursor: 'pointer' }}  onClick={handleSignOut}>
+            <div className="row" style={{ backgroundColor: '#e0e0e0', height: '4vh', borderRadius: '5px', marginTop: '10px', cursor: 'pointer' }} onClick={handleSignOut}>
                 <div className="col-11">
                     <a style={{ textDecoration: 'none', color: 'black' }} >
                         <i><Icon icon="fa:sign-out" style={{ marginRight: '10px' }} /></i>

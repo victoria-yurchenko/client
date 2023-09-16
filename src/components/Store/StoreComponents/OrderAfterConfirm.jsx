@@ -3,7 +3,7 @@ import React from 'react'
 export default function OrderAfterConfirm() {
 
   const handleSubmit = () => {
-
+    window.location.replace(`http://localhost:3000/store`);
   };
 
   return (

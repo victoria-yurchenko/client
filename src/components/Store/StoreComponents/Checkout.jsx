@@ -249,7 +249,7 @@ export default function Checkout() {
                                         I've read and accept the <a href="#">terms & conditions</a>
                                     </label>
                                 </div>
-                                <a href='#' className="primary-btn order-submit" id='submit-btn-id' style={{ backgroundColor: '#d10023a5' }} onClick={handleSubmitOrder}>submit order</a>
+                                <a href='#' className="primary-btn order-submit" id='submit-btn-id' style={{ backgroundColor: '#d10023a5', textDecoration: 'none' }} onClick={handleSubmitOrder}>submit order</a>
                             </div>
                         </div>
                     </div>

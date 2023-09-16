@@ -94,11 +94,13 @@ export default function ChangeProductForm({ products, url }) {
 
     const splitFeatures = (features) => {
         const _features = [];
-        for (let i = 0; i < features.length; i++) {
-            const feature = features[i].split("____");
-            const featureValue = feature[0];
-            const featureName = feature[1];
-            _features.push({ featureName, featureValue });
+        if (features !== undefined) {
+            for (let i = 0; i < features.length; i++) {
+                const feature = features[i].split("____");
+                const featureValue = feature[0];
+                const featureName = feature[1];
+                _features.push({ featureName, featureValue });
+            }
         }
         return _features;
     };
@@ -152,11 +154,14 @@ export default function ChangeProductForm({ products, url }) {
         console.log(featuresValues);
         const toSend = [];
 
-        for (let i = 0; i < featuresNames.length; i++) {
-            const featureToSend = `${featuresNames[i].value}${separator}${featuresValues[i].value}`;
-            toSend.push(featureToSend);
+        if (featuresNames !== undefined) {
+            for (let i = 0; i < featuresNames.length; i++) {
+                const featureToSend = `${featuresNames[i].value}${separator}${featuresValues[i].value}`;
+                toSend.push(featureToSend);
+            }
+            setFeatures(toSend);
         }
-        setFeatures(toSend);
+        return toSend;
     };
 
     const handleSelectCategory = (event) => {
@@ -167,8 +172,6 @@ export default function ChangeProductForm({ products, url }) {
     };
 
     const handleSubmit = (event) => {
-        collectFeatures();
-
         const _productName = document.getElementById('feature-name-id').value;
         const _categories = selectedCategories;
         const _price = document.getElementById('feature-price-id').value;
@@ -176,7 +179,7 @@ export default function ChangeProductForm({ products, url }) {
         const _countOnStock = document.getElementById('feature-stock-count-id').value;
         const _shortDescription = document.getElementById('feature-short-description-id').value;
         const _pictures = imagesBase64;
-        const _features = features;
+        const _features = collectFeatures();;
 
         let product = {
             productName: _productName,
@@ -197,6 +200,8 @@ export default function ChangeProductForm({ products, url }) {
         fetch(`http://localhost:5089/api/maestro/update/${product.productId}`, options)
             .then(response => console.log(response))
             .catch(error => console.log(error));
+
+        window.location.replace(`http://localhost:3000/product/${params.id}`);
     };
 
     const handleDeleteProduct = (event) => {

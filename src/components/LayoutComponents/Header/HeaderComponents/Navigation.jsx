@@ -22,9 +22,15 @@ export default function Navigation({ categoriesList, clicked }) {
     };
 
     const handleAccountPage = () => {
-        if (localStorage.getItem('UserLoggedId') == null)
-            window.location.replace(`http://localhost:3000/login`);
         window.location.replace(`http://localhost:3000/myaccount`);
+    };
+
+    const handleLoginPage = () => {
+        window.location.replace(`http://localhost:3000/login`);
+    };
+
+    const handleWishlist = () => {
+        window.location.replace(`http://localhost:3000/wishlist`);
     };
 
     return (
@@ -41,22 +47,15 @@ export default function Navigation({ categoriesList, clicked }) {
                             linkToPage='#'
 
                         />
-
-                        <li className='nav-item'>
-
+                        <li className='nav-item' style={{ marginLeft: '38px' }}>
                             <CategoryDropdown />
-
-                            {/* <a className='nav-link navbar-text' onClick={() => setIsClicked(!isClicked)}
-                                style={{ fontWeight: '500' }}
-                            >Categories</a> */}
-
                         </li>
                         {
-                            localStorage.getItem('UserLoggedId') == null
+                            !(localStorage.getItem('UserLoggedId') > 0)
                                 ?
-                                <li className='nav-item '>
+                                <li className='nav-item ' style={{ marginLeft: '60px' }}>
                                     <a className='nav-link navbar-text'
-                                        onClick={handleAccountPage}
+                                        onClick={handleLoginPage}
                                         style={{ fontWeight: '500' }}>
                                         <HeaderIcon
                                             icon='fa:user-o'
@@ -66,38 +65,40 @@ export default function Navigation({ categoriesList, clicked }) {
                                     </a>
                                 </li>
                                 :
-                                <li className='nav-item '>
-                                    <a className='nav-link navbar-text'
-                                        onClick={handleAccountPage}
-                                        style={{ fontWeight: '500' }}>
-                                        <HeaderIcon
-                                            icon='fa:user-o'
-                                            title='My Account'
-                                            qti={0}
-                                        />
-                                    </a>
-                                </li>
+                                <>
+                                    <li className='nav-item ' style={{ marginLeft: '40px' }}>
+                                        <a className='nav-link navbar-text'
+                                            onClick={handleAccountPage}
+                                            style={{ fontWeight: '500' }}>
+                                            <HeaderIcon
+                                                icon='fa:user-o'
+                                                title='My Account'
+                                                qti={0}
+                                            />
+                                        </a>
+                                    </li>
+                                    <li className='nav-item'>
+                                        <a className='nav-link navbar-text' href="#"
+                                        onClick={handleWishlist}
+                                            style={{ fontWeight: '500' }}>
+                                            <HeaderIcon
+                                                icon='fa:heart-o'
+                                                title='Wishlist'
+                                            />
+                                        </a>
+                                    </li>
+                                    <li className='nav-item'>
+                                        <a className='nav-link navbar-text'
+                                            onClick={handleCardPage}
+                                            style={{ fontWeight: '500' }}>
+                                            <HeaderIcon
+                                                icon='fa:shopping-cart'
+                                                title='Cart'
+                                            />
+                                        </a>
+                                    </li>
+                                </>
                         }
-
-                        <li className='nav-item'>
-                            <a className='nav-link navbar-text' href="#"
-                                style={{ fontWeight: '500' }}>
-                                <HeaderIcon
-                                    icon='fa:heart-o'
-                                    title='Wishlist'
-                                />
-                            </a>
-                        </li>
-                        <li className='nav-item'>
-                            <a className='nav-link navbar-text'
-                                onClick={handleCardPage}
-                                style={{ fontWeight: '500' }}>
-                                <HeaderIcon
-                                    icon='fa:shopping-cart'
-                                    title='Cart'
-                                />
-                            </a>
-                        </li>
                     </ul>
                 </div>
             </div>

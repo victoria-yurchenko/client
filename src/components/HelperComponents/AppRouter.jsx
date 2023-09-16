@@ -16,6 +16,11 @@ import ShoppingCard from '../Store/ShoppingCard';
 import DeleteAccount from '../Account/DeleteAccount';
 import Orders from '../Account/Orders';
 import OrderAfterConfirm from '../Store/StoreComponents/OrderAfterConfirm';
+import HistoryOrders from '../Account/HistoryOrders';
+import Wishlist from '../Account/Wishlist';
+import OrderTrack from '../Store/OrderTrack';
+import HotDeals from '../Store/HotDeals';
+import AddHotDealForm from '../Store/AddHotDealForm';
 
 export default function AppRouter({ url, data }) {
 
@@ -78,6 +83,11 @@ export default function AppRouter({ url, data }) {
                 <Route path='/changeproduct/:id' element={<ChangeProductForm url={url} />} />
                 <Route path='/product/delete/:id' element={<DeleteProductForm products={data.productsDBO} />} />
                 <Route path='/card' element={<ShoppingCard />} />
+                <Route path='/history' element={<HistoryOrders />} />
+                <Route path='/wishlist' element={<Wishlist />} />
+                <Route path='/ordertrack' element={<OrderTrack />} />
+                <Route path='/hotdeals' element={<HotDeals />} />
+                <Route path='/addhotdeal' element={<AddHotDealForm />} />
             </Routes>
         </BrowserRouter>
     )
