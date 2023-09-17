@@ -44,7 +44,7 @@ export default function Navigation({ categoriesList, clicked }) {
                         />
                         <NavigationItem
                             categoryName='Hot Deals'
-                            linkToPage='#'
+                            linkToPage='/hotdeals'
 
                         />
                         <li className='nav-item' style={{ marginLeft: '38px' }}>

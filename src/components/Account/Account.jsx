@@ -41,6 +41,10 @@ export default function Account({ user }) {
         window.location.replace(`http://localhost:3000/ordertrack`);
     };
 
+    const handleProfile = () => {
+        window.location.replace(`http://localhost:3000/profile`);    
+    };
+
     return (
         <div className="container" >
             <div className="row" style={{ backgroundColor: '#e0e0e0', height: '4vh', borderRadius: '5px', marginTop: '20px', cursor: 'pointer' }} onClick={handleOrders}>
@@ -100,7 +104,7 @@ export default function Account({ user }) {
                     <i><Icon icon="fa:arrow-right" style={{ marginRight: '10px' }} /></i>
                 </div>
             </div>
-            <div className="row" style={{ backgroundColor: '#e0e0e0', height: '4vh', borderRadius: '5px', marginTop: '10px', cursor: 'pointer' }}>
+            <div className="row" style={{ backgroundColor: '#e0e0e0', height: '4vh', borderRadius: '5px', marginTop: '10px', cursor: 'pointer' }}  onClick={handleProfile}>
                 <div className="col-11">
                     <a style={{ textDecoration: 'none', color: 'black' }} >
                         <i><Icon icon="fa:cog" style={{ marginRight: '10px' }} /></i>

@@ -10,11 +10,13 @@ export default function AddHotDealForm() {
         console.log(productCode);
         console.log(finishDate);
 
+        let productDate = {
+            productId: productCode,
+            finishesAt: finishDate
+        };
+
         console.log(
-            JSON.stringify({
-                productId: productCode,
-                finishesAt: finishDate
-            })
+            JSON.stringify(productDate)
         );
 
         const options = {

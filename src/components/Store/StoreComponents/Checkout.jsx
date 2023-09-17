@@ -12,10 +12,10 @@ export default function Checkout() {
             userId: localStorage.getItem('UserLoggedId')
         }))
             .then(responce => responce.json().then(data => {
-                // console.log(data);
+                console.log(data);
                 setProducts(data);
                 let total = 0;
-                data.map(item => total += item.newPrice);
+                data.map(item => total += item.product.newPrice);
                 setTotalPrice(total);
             }))
             .catch(error => console.log(error));
@@ -72,14 +72,20 @@ export default function Checkout() {
         }
 
         const orderNotes = document.getElementById('order-notes-id').value;
+        let productsToSend = [];
+
+        products.map(item => {
+            productsToSend.push(item.product);
+        });
 
         const orderDBO = {
-            products: products,
+            products: productsToSend,
             userId: user.userId,
             address: address,
             orderNotes: orderNotes
         };
         console.log(JSON.stringify(orderDBO))
+        console.log(orderDBO)
 
         console.log(products)
         const options = {
@@ -187,28 +193,41 @@ export default function Checkout() {
                                     <h3 className="title">Your Order</h3>
                                 </div>
                                 <div className="order-summary">
-                                    <div className="order-col">
-                                        <div><strong>PRODUCT</strong></div>
-                                        <div><strong>TOTAL</strong></div>
-                                    </div>
                                     <div className="order-products">
                                         {
                                             products.map(p =>
-                                                <div className="order-col">
-                                                    <div>1x {p.name}</div>
-                                                    <div>${p.newPrice}</div>
+                                                <div className="row" style={{ margin: '30px' }}>
+                                                    <table>
+                                                        <thead>
+                                                            <tr>
+                                                                <th width="10%"></th>
+                                                                <th width="85%"></th>
+                                                                <th width="5%"></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <img src={`data:image/jpeg;base64,${p.image}`} height={100} alt='product image' />
+                                                                </td>
+                                                                <td>
+                                                                    <label>{p.product.name}</label>
+                                                                </td>
+                                                                <td>
+                                                                    <label>${p.saledByPrice}</label>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <div className="order-col">
+                                                        <div><strong>TOTAL</strong></div>
+                                                        <div><strong className="order-total">$ {p.totalPrice}</strong></div>
+                                                    </div>
                                                 </div>
                                             )
                                         }
                                     </div>
-                                    <div className="order-col">
-                                        <div>Shiping</div>
-                                        <div><strong>FREE</strong></div>
-                                    </div>
-                                    <div className="order-col">
-                                        <div><strong>TOTAL</strong></div>
-                                        <div><strong className="order-total">${totalPrice}</strong></div>
-                                    </div>
+
                                 </div>
                                 <div className="payment-method">
                                     <div className="input-radio">

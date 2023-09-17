@@ -21,6 +21,8 @@ import Wishlist from '../Account/Wishlist';
 import OrderTrack from '../Store/OrderTrack';
 import HotDeals from '../Store/HotDeals';
 import AddHotDealForm from '../Store/AddHotDealForm';
+import Profile from '../Account/Profile';
+import ChangePassword from '../Account/ChangePassword';
 
 export default function AppRouter({ url, data }) {
 
@@ -88,6 +90,8 @@ export default function AppRouter({ url, data }) {
                 <Route path='/ordertrack' element={<OrderTrack />} />
                 <Route path='/hotdeals' element={<HotDeals />} />
                 <Route path='/addhotdeal' element={<AddHotDealForm />} />
+                <Route path='/profile' element={<Profile />} />
+                <Route path='/changepassword' element={<ChangePassword />} />
             </Routes>
         </BrowserRouter>
     )

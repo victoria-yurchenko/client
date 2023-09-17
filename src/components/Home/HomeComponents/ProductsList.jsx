@@ -3,6 +3,7 @@ import ProductCart from '../../HelperComponents/ProductCart';
 import { useState } from 'react';
 import { useLayoutEffect } from 'react';
 import { useEffect } from 'react';
+import { useWindowSize } from '../../../hooks/useWindowSize';
 
 
 export default function ProductsList({ products }) {
@@ -17,21 +18,7 @@ export default function ProductsList({ products }) {
         autoplaySpeed: 6000,
     });
 
-    function useWindowSize() {
-
-        const [size, setSize] = useState([0, 0]);
-        useLayoutEffect(() => {
-            function updateSize() {
-                setSize([window.innerWidth, window.innerHeight]);
-            }
-            window.addEventListener('resize', updateSize);
-            updateSize();
-            console.log(products)
-            return () => window.removeEventListener('resize', updateSize);
-        }, []);
-        return size;
-    }
-
+    
     function SetWindowDimensions(props) {
         const [width, height] = useWindowSize();
         let slidesToShow = 0;

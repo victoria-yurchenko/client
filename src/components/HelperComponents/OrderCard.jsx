@@ -31,7 +31,7 @@ export default function OrderCard(order) {
                                             <label>{p.product.name}</label>
                                         </td>
                                         <td>
-                                            <label>${p.product.newPrice}</label>
+                                            <label>${p.saledByPrice}</label>
                                         </td>
                                     </tr>
                                 </tbody>
