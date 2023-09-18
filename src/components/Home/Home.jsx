@@ -8,12 +8,17 @@ import { useState } from 'react';
 export default function Home() {
 
     const [products, setProducts] = useState();
+    const [topSellingProducts, setTopSellingProducts] = useState([]);
+
+    const getTopSellingProducts = (products) => {
+        return products.sort((a, b) => a.rate < b.rate ? 1 : -1).splice(0, 6);
+    };
 
     useEffect(() => {
         fetch('http://localhost:5089/api/maestro')
             .then(responce => responce.json().then(data => {
                 setProducts(data.productsDBO);
-                console.log(data.productsDBO);
+                setTopSellingProducts(getTopSellingProducts(data.productsDBO));
             }))
             .catch(error => console.log(error));
     }, []);
@@ -34,7 +39,7 @@ export default function Home() {
                         <HotDeal />
                         <SliderSection
                             title='Top Selling'
-                            products={products.slice(0, 6)}
+                            products={topSellingProducts}
                         />
                     </div>
             }

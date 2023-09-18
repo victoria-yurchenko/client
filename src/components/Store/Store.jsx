@@ -292,6 +292,7 @@ export default function Store({ data }) {
                                                             oldPrice={item.oldPrice}
                                                             isAdminSession={currentUser.roleId === 1 ? true : false}
                                                             isInWishlistByDefault={false}
+                                                            rate={item.rate}
                                                         />
                                                     }
                                                 </div>

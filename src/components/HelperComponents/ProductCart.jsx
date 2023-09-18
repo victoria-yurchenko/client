@@ -11,6 +11,7 @@ export default function ProductCart({
     newPrice,
     category,
     productName,
+    rate,
     oldPrice,
     isAdminSession,
     productId,
@@ -81,10 +82,10 @@ export default function ProductCart({
             body: JSON.stringify(removeFromCard)
         };
         fetch('http://localhost:5089/api/maestro/removefromwishlist', options)
-           .then(response => console.log(response))
-           .catch(error => console.log(error));
+            .then(response => console.log(response))
+            .catch(error => console.log(error));
         setIsInWishlist(!isInWishlist);
-        if (isInWishlistByDefault) 
+        if (isInWishlistByDefault)
             window.location.reload();
     };
 
@@ -125,7 +126,7 @@ export default function ProductCart({
                 .then(response => console.log(response))
                 .catch(error => console.log(error));
 
-           
+
         }
     };
 
@@ -193,6 +194,60 @@ export default function ProductCart({
                         : <h4 className="product-price">${newPrice}</h4>
 
                 }
+                <div class="product-rating">
+                    {
+                        rate === 0 
+                            ? <></>
+                            :
+                        rate === 1
+                            ? 
+                            <>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star' /></i>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star-o' /></i>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star-o' /></i>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star-o' /></i>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star-o' /></i>
+                            </>
+                            :
+                        rate === 2
+                            ?
+                            <>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star' /></i>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star' /></i>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star-o' /></i>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star-o' /></i>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star-o' /></i>
+                            </>
+                            :
+                        rate === 3
+                            ?
+                            <>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star' /></i>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star' /></i>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star' /></i>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star-o' /></i>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star-o' /></i>
+                            </>
+                            :
+                        rate === 4
+                            ?
+                            <>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star' /></i>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star' /></i>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star' /></i>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star' /></i>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star-o' /></i>
+                            </>
+                            :
+                            <>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star' /></i>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star' /></i>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star' /></i>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star' /></i>
+                                <i><Icon color="#D10024" style={{ margin: '4px' }} icon='fa:star' /></i>
+                            </>
+                    }
+                </div>
                 <div className="product-btns">
                     {
                         isLogged
@@ -214,8 +269,7 @@ export default function ProductCart({
                     ?
                     <div className="add-to-cart">
                         {
-                            !
-                                isRemove
+                            !isRemove
                                 ? <button className="add-to-cart-btn" onClick={handleAddToCard}><i><Icon icon='fa:shopping-cart' /></i> add to cart</button>
                                 : <button className="add-to-cart-btn" onClick={handleRemoveFromCard}><i><Icon icon='fa:trash' /></i> remove</button>
                         }

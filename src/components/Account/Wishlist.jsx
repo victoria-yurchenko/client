@@ -61,6 +61,7 @@ export default function Wishlist() {
                                             oldPrice={item.oldPrice}
                                             isAdminSession={currentUser.roleId === 1 ? true : false}
                                             isInWishlistByDefault={true}
+                                            rate={item.rate}
                                         />
                                     }
                                 </div>

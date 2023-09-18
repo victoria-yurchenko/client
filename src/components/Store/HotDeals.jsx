@@ -60,11 +60,12 @@ export default function HotDeals() {
                                                 image={`${item.image}`}
                                                 isNew={false}
                                                 productName={item.product.name}
-                                                productId={item.product.productId}
+                                                productId={item.product.id}
                                                 newPrice={item.product.newPrice}
                                                 oldPrice={item.product.oldPrice}
                                                 isAdminSession={currentUser.roleId === 1 ? true : false}
                                                 isInWishlistByDefault={false}
+                                                rate={item.product.rate}
                                             />
                                         }
                                     </div>

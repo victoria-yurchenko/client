@@ -53,7 +53,7 @@ export default function ProductsList({ products }) {
                                     (item, index) =>
                                         <ProductCart
                                             key={index}
-                                            productId={item.id}
+                                            productId={item.productId}
                                             image={item.image}
                                             isNew={item.isNew}
                                             isSale={item.isSale}
@@ -62,6 +62,7 @@ export default function ProductsList({ products }) {
                                             productName={item.productName}
                                             newPrice={item.newPrice}
                                             oldPrice={item.oldPrice}
+                                            rate={item.rate}
                                         />
                                 )
                             }

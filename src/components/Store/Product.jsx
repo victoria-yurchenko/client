@@ -12,36 +12,93 @@ export default function Product({ products }) {
 
     const params = useParams();
     const [product, setProduct] = useState(null);
+    const [isRemove, setIsRemove] = useState(false);
+    const [rate, setRate] = useState(5);
+    const [reviews, setReviews] = useState([]);
+    const [averageRate, setAverageRate] = useState(5);
+    const [isInWishlist, setIsInWishlist] = useState(false);
+    const [stars, setStars] = useState([0, 0, 0, 0, 0]);
 
     useEffect(() => {
         fetch(`http://localhost:5089/api/maestro/${params.id}`)
             .then(responce => responce.json().then(data => {
                 console.log(data);
                 setProduct(data);
-                console.log(data.pictures[0]);
+                setReviews(data.reviews);
+                let temp = [];
+                data.reviews.map(r => temp.push(r.rate));
+                console.log(temp);
+                fillReviewProgressBars(temp);
+                const sum = data.reviews.reduce((partialSum, a) => partialSum + a.rate, 0);
+                const avg = (parseFloat(sum) / parseFloat(data.reviews.length));
+                setAverageRate(avg);
             }))
             .catch(error => console.log(error));
     }, [products]);
 
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const fillReviewProgressBars = (rate) => {
+        let fiveStartsSum = 0;
+        let fourStartsSum = 0;
+        let threeStartsSum = 0;
+        let twoStartsSum = 0;
+        let oneStarSum = 0;
+
+        for (let i = 0; i < rate.length; i++) {
+            switch (rate[i]) {
+                case 5:
+                    fiveStartsSum++;
+                    break;
+                case 4:
+                    fourStartsSum++;
+                    break;
+                case 3:
+                    threeStartsSum++;
+                    break;
+                case 2:
+                    twoStartsSum++;
+                    break;
+                case 1:
+                    oneStarSum++;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        setStars([fiveStartsSum, fourStartsSum, threeStartsSum, twoStartsSum, oneStarSum]);
+
+        const divider = oneStarSum + twoStartsSum + threeStartsSum + fourStartsSum + fiveStartsSum;
+
+        const oneStarPercent = (parseFloat(oneStarSum) / parseFloat(divider)) * parseFloat(100);
+        const twoStartsPercent = (parseFloat(twoStartsSum) / parseFloat(divider)) * parseFloat(100);
+        const threeStartsPercent = (parseFloat(threeStartsSum) / parseFloat(divider)) * parseFloat(100);
+        const fourStartsPercent = (parseFloat(fourStartsSum) / parseFloat(divider)) * parseFloat(100);
+        const fiveStartsPercent = (parseFloat(fiveStartsSum) / parseFloat(divider)) * parseFloat(100);
+
+        document.getElementById('progress-1').style.width = `${oneStarPercent}%`;        
+        document.getElementById('progress-2').style.width = `${twoStartsPercent}%`;        
+        document.getElementById('progress-3').style.width = `${threeStartsPercent}%`;        
+        document.getElementById('progress-4').style.width = `${fourStartsPercent}%`;        
+        document.getElementById('progress-5').style.width = `${fiveStartsPercent}%`;        
+    };
 
     const handleDescription = (event) => {
         document.getElementById('tab1').className = 'tab-pane in active';
         document.getElementById("tab2").className = 'tab-pane fade in';
-        // document.getElementById("tab3").className = 'tab-pane fade in';
+        document.getElementById("tab3").className = 'tab-pane fade in';
     };
 
     const handleDetails = (event) => {
         document.getElementById('tab1').className = 'tab-pane fade in';
         document.getElementById("tab2").className = 'tab-pane in active';
-        // document.getElementById("tab3").className = 'tab-pane fade in';
+        document.getElementById("tab3").className = 'tab-pane fade in';
     };
 
-    // const handleReviews = (event) => {
-    //     document.getElementById('tab1').className = 'tab-pane fade in';
-    //     document.getElementById("tab2").className = 'tab-pane fade in';
-    //     document.getElementById("tab3").className = 'tab-pane in active';
-    // };
+    const handleReviews = (event) => {
+        document.getElementById('tab1').className = 'tab-pane fade in';
+        document.getElementById("tab2").className = 'tab-pane fade in';
+        document.getElementById("tab3").className = 'tab-pane in active';
+    };
 
     const handleButtonMouseEnter = (event) => {
         event.target.style.color = '#D10024';
@@ -64,24 +121,123 @@ export default function Product({ products }) {
         return _features;
     };
 
-    // const handleClickPrevious = () => {
-    //     let index = currentIndex;
-    //     if (currentIndex > 0)
-    //         index--;
-    //     else
-    //         index = images.length - 1;
-    //     setCurrentIndex(index);
-    // };
+    const handleRatingStars = (event) => {
+        const id = event.target.id === '' ? event.target.parentElement.id : event.target.id;
 
-    // const handleClickNext = () => {
-    //     let index = currentIndex;
-    //     if (currentIndex < images.length - 1)
-    //         index++;
-    //     else
-    //         index = 0;
-    //     setCurrentIndex(index);
-    // };
+        if (id ==='star-1') 
+            setRate(1);
+        if (id ==='star-2')
+            setRate(2);
+        if (id ==='star-3')
+            setRate(3);
+        if (id ==='star-4')
+            setRate(4);
+        if (id ==='star-5')
+            setRate(5);
+    };
 
+    const handleSubmitRating = (event) => {
+        event.preventDefault();
+        const reviewText = document.getElementById('rating-textarea').value;
+
+        if (!reviewText)
+            return;
+
+        const review = {
+            reviewText: reviewText,
+            rate: rate,
+            productId: params.id,
+            userId: localStorage.getItem('UserLoggedId'),
+            createdAt: new Date()
+        };
+
+        const options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=utf-8' },
+            body: JSON.stringify(review)
+        };
+        fetch('http://localhost:5089/api/maestro/addreview', options)
+            .then(response => {
+                console.log(response.status);
+                if (response.status === 200) {
+                    window.location.reload();
+                }
+                else {
+                    // error.innerHTML = 'Entered passwords are incorrect';
+                    // document.getElementById('validation-error-text').appendChild(error);
+                }
+            })
+            .catch(error => console.log(error));
+    };
+
+    const handleAddToCard = (event) => {
+
+        event.preventDefault();
+
+        const addToCard = {
+            userId: localStorage.getItem('UserLoggedId'),
+            productId: product.productId
+        }
+        const options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=utf-8' },
+            body: JSON.stringify(addToCard)
+        };
+        fetch('http://localhost:5089/api/maestro/addtocard', options)
+            .then(response => console.log(response))
+            .catch(error => console.log(error));
+        setIsRemove(!isRemove);
+    }
+
+    const handleRemoveFromCard = () => {
+        setIsRemove(!isRemove);
+        if (localStorage.getItem('UserLoggedId') != null) { // the user is logged
+            const addToCard = {
+                userId: localStorage.getItem('UserLoggedId'),
+                productId: product.productId
+            }
+            const options = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json; charset=utf-8' },
+                body: JSON.stringify(addToCard)
+            };
+            fetch('http://localhost:5089/api/maestro/removefromcard', options)
+                .then(response => console.log(response))
+                .catch(error => console.log(error));
+        }
+    };
+
+    const handleAddToWishlist = () => {
+        const addToCard = {
+            userId: localStorage.getItem('UserLoggedId'),
+            productId: product.productId
+        }
+        const options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=utf-8' },
+            body: JSON.stringify(addToCard)
+        };
+        fetch('http://localhost:5089/api/maestro/addtowishlist', options)
+            .then(response => console.log(response))
+            .catch(error => console.log(error));
+        setIsInWishlist(!isInWishlist);
+    };
+
+    const handleRemoveFromWishlist = () => {
+        const removeFromCard = {
+            userId: localStorage.getItem('UserLoggedId'),
+            productId: product.productId
+        }
+        const options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=utf-8' },
+            body: JSON.stringify(removeFromCard)
+        };
+        fetch('http://localhost:5089/api/maestro/removefromwishlist', options)
+           .then(response => console.log(response))
+           .catch(error => console.log(error));
+        setIsInWishlist(!isInWishlist);
+    };
 
     return (
         <div className="section">
@@ -90,17 +246,9 @@ export default function Product({ products }) {
                     ? <></>
                     : <div className="container">
                         <div className="row">
-
                             <div className="col-md-5 col-md-push-2">
-
                                 <div className="slider-wrapper" style={{ height: '400px' }}>
                                     <img src={`data:image/jpeg;base64,${product.pictures[0]}`} alt="" height={300} />
-                                    {/* <i className="slide-arrow" id="slide-arrow-prev" onClick={handleClickPrevious}>
-                                        <Icon icon='fa:arrow-left' style={{ backgroundColor: 'white', borderRadius: '5px' }} />
-                                    </i>
-                                    <i className="slide-arrow" id="slide-arrow-next" onClick={handleClickNext}>
-                                        <Icon icon='fa:arrow-right' style={{ backgroundColor: 'white', borderRadius: '5px' }} />
-                                    </i> */}
                                 </div>
                             </div>
 
@@ -108,18 +256,66 @@ export default function Product({ products }) {
                                 <div className="product-details">
                                     <h2 className="product-name">{product.productName}</h2>
                                     <div>
-                                        {/* <div className="product-rating">
-                                            <i><Icon icon='fa:star' /></i>
-                                            <i><Icon icon='fa:star' /></i>
-                                            <i><Icon icon='fa:star' /></i>
-                                            <i><Icon icon='fa:star' /></i>
-                                            <i><Icon icon='fa:star-o' /></i>
+                                        <div className="product-rating">
+                                        {
+                                            Math.floor(averageRate) === 1
+                                                ?
+                                                <>
+                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                    <i><Icon color="#D10024" icon='fa:star-o' /></i>
+                                                    <i><Icon color="#D10024" icon='fa:star-o' /></i>
+                                                    <i><Icon color="#D10024" icon='fa:star-o' /></i>
+                                                    <i><Icon color="#D10024" icon='fa:star-o' /></i>
+                                                </>
+                                                :
+                                            Math.floor(averageRate) === 2
+                                                ?
+                                                <>
+                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                    <i><Icon color="#D10024" icon='fa:star-o' /></i>
+                                                    <i><Icon color="#D10024" icon='fa:star-o' /></i>
+                                                    <i><Icon color="#D10024" icon='fa:star-o' /></i>
+                                                </>
+                                                :
+                                            Math.floor(averageRate) === 3
+                                                ?
+                                                <>
+                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                    <i><Icon color="#D10024" icon='fa:star-o' /></i>
+                                                    <i><Icon color="#D10024" icon='fa:star-o' /></i>
+                                                </>
+                                                :
+                                            Math.floor(averageRate) === 4
+                                                ?
+                                                <>
+                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                    <i><Icon color="#D10024" icon='fa:star-o' /></i>
+                                                </>
+                                                :
+                                                <>
+                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                </>
+                                        }
                                         </div>
-                                        <a className="review-link" href="#">10 Review(s) | Add your review</a> */}
+                                        <a className="review-link" style={{ textDecoration: 'none', color: 'black', cursor: 'pointer' }}>{reviews.length} Review(s)</a>
                                     </div>
                                     <div>
                                         <h3 className="product-price">${product.newPrice}
-                                            <del className="product-old-price" style={{ marginLeft: '20px' }}>${product.oldPrice} </del>
+                                            {
+                                                product.newPrice < product.oldPrice 
+                                                ? <del className="product-old-price" style={{ marginLeft: '20px' }}>${product.oldPrice} </del>
+                                                : <></>
+                                            }
                                         </h3>
                                         {
                                             product.countOnStock > 0
@@ -138,11 +334,30 @@ export default function Product({ products }) {
                                         <span className="qty-down">-</span>
                                     </div>
                                 </div> */}
-                                        <button className="add-to-cart-btn"><i className="fa fa-shopping-cart"><Icon icon='fa:shopping-cart' /></i> add to cart</button>
+                                        {
+                                            !isRemove
+                                                ? 
+                                                <>
+                                                    {
+                                                        product.countOnStock > 0
+                                                        ? <button className="add-to-cart-btn" onClick={handleAddToCard}><i><Icon icon='fa:shopping-cart' /></i> add to cart</button>
+                                                        : <button className="add-to-cart-btn"><i className="fa fa-shopping-cart" disabled><Icon icon='fa:shopping-cart' /></i> saled</button>
+                                                    }
+                                                </>
+                                                : <button className="add-to-cart-btn" onClick={handleRemoveFromCard}><i><Icon icon='fa:trash' /></i> remove</button>
+                                        }
+                                        {
+                                            
+                                        }
                                     </div>
 
                                     <ul className="product-btns">
-                                        <li><a href="" className="nav-link nav-text" style={{ textDecoration: 'none' }} ><i><Icon icon='fa:heart-o' /></i> add to wishlist</a></li>
+                                    {
+                                        !isInWishlist
+                                            ? <li><a href="#" style={{ textDecoration: 'none', color: 'inherit' }} onClick={handleAddToWishlist}><i><Icon icon='fa:heart-o' /></i> add to wishlist</a></li>
+                                            : <li><a href="#" style={{ textDecoration: 'none', color: 'inherit' }} onClick={handleRemoveFromWishlist}><i><Icon icon='basil:heart-solid' height="20px"/></i> remove from wishlist</a></li>
+                                    }
+                                        
                                     </ul>
 
                                     <ul className="product-links">
@@ -162,7 +377,7 @@ export default function Product({ products }) {
                                         <li><a style={{ textDecoration: 'none' }} ><i><Icon icon='fa:envelope' /></i></a></li>
                                     </ul>
 
-                                    <ul className="product-links" style={{fontWeight: 600}}>
+                                    <ul className="product-links" style={{ fontWeight: 600 }}>
                                         <li>Site Code:</li>
                                         <li>{params.id}</li>
                                     </ul>
@@ -201,7 +416,7 @@ export default function Product({ products }) {
                                                 Details
                                             </button>
                                         </li>
-                                        {/* <li>
+                                        <li>
                                             <button
                                                 onClick={handleReviews}
                                                 onMouseEnter={handleButtonMouseEnter}
@@ -212,9 +427,9 @@ export default function Product({ products }) {
                                                     fontFamily: 'sans-serif'
                                                 }}
                                             >
-                                                Reviews(3)
+                                                Reviews({reviews.length})
                                             </button>
-                                        </li> */}
+                                        </li>
                                     </ul>
 
                                     <div className="tab-content">
@@ -228,128 +443,151 @@ export default function Product({ products }) {
 
                                         <div id="tab2" className="tab-pane in fade ">
                                             <div className="row">
-
                                                 <table>
-
                                                     <thead>
                                                         <tr>
                                                             <th width="50%"></th>
                                                             <th width="50%"></th>
                                                         </tr>
                                                     </thead>
-
                                                     <tbody>
                                                         {
                                                             splitFeatures(product.features).map(f =>
-                                                        <tr>
-                                                            <td>{f.featureValue}</td>
-                                                            <td>{f.featureName}</td>
-                                                        </tr>
-                                                        )
+                                                                <tr>
+                                                                    <td>{f.featureValue}</td>
+                                                                    <td>{f.featureName}</td>
+                                                                </tr>
+                                                            )
                                                         }
                                                     </tbody>
                                                 </table>
-
-                                                {/* <div className="col-md-6">
-                                                    <p>
-                                                        {
-                                                            splitFeatures(product.features).map(f =>
-                                                                <div>{f.featureValue}</div>
-                                                            )
-                                                        }
-                                                    </p>
-                                                </div>
-                                                <div className="col-md-6">
-                                                    <p>
-                                                        {
-                                                            splitFeatures(product.features).map(f =>
-                                                                <div>{f.featureName}</div>
-                                                            )
-                                                        }
-                                                    </p>
-                                                </div> */}
                                             </div>
                                         </div>
 
-                                        {/* <div id="tab3" className="tab-pane">
+                                        <div id="tab3" className="tab-pane">
                                             <div className="row">
                                                 <div className="col-md-3">
                                                     <div id="rating">
                                                         <div className="rating-avg">
-                                                            <span>4.5</span>
+                                                            <span>{averageRate > 0 ? averageRate.toFixed(1) : 'Be First To Rate'}</span>
                                                             <div className="rating-stars">
-                                                                <i><Icon icon='fa:star' /></i>
-                                                                <i><Icon icon='fa:star' /></i>
-                                                                <i><Icon icon='fa:star' /></i>
-                                                                <i><Icon icon='fa:star' /></i>
-                                                                <i><Icon icon='fa:star-o' /></i>
+                                                                {
+                                                                    Math.floor(averageRate) === 1
+                                                                        ?
+                                                                        <>
+                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                            <i><Icon icon='fa:star-o' /></i>
+                                                                            <i><Icon icon='fa:star-o' /></i>
+                                                                            <i><Icon icon='fa:star-o' /></i>
+                                                                            <i><Icon icon='fa:star-o' /></i>
+                                                                        </>
+                                                                        :
+                                                                    Math.floor(averageRate) === 2
+                                                                        ?
+                                                                        <>
+                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                            <i><Icon icon='fa:star-o' /></i>
+                                                                            <i><Icon icon='fa:star-o' /></i>
+                                                                            <i><Icon icon='fa:star-o' /></i>
+                                                                        </>
+                                                                        :
+                                                                    Math.floor(averageRate) === 3
+                                                                        ?
+                                                                        <>
+                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                            <i><Icon icon='fa:star-o' /></i>
+                                                                            <i><Icon icon='fa:star-o' /></i>
+                                                                        </>
+                                                                        :
+                                                                    Math.floor(averageRate) === 4
+                                                                        ?
+                                                                        <>
+                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                            <i><Icon icon='fa:star-o' /></i>
+                                                                        </>
+                                                                        :
+                                                                        <>
+                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                        </>
+                                                                }
                                                             </div>
                                                         </div>
                                                         <ul className="rating">
                                                             <li>
                                                                 <div className="rating-stars">
-                                                                    <i><Icon icon='fa:star' /></i>
-                                                                    <i><Icon icon='fa:star' /></i>
-                                                                    <i><Icon icon='fa:star' /></i>
-                                                                    <i><Icon icon='fa:star' /></i>
-                                                                    <i><Icon icon='fa:star' /></i>
+                                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
                                                                 </div>
                                                                 <div className="rating-progress">
-                                                                    <div style={{ width: "80%" }}></div>
+                                                                    <div id='progress-5' style={{ width: "80%" }}></div>
                                                                 </div>
-                                                                <span className="sum">3</span>
+                                                                <span className="sum">{stars[0]}</span>
                                                             </li>
                                                             <li>
                                                                 <div className="rating-stars">
-                                                                    <i><Icon icon='fa:star' /></i>
-                                                                    <i><Icon icon='fa:star' /></i>
-                                                                    <i><Icon icon='fa:star' /></i>
+                                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
                                                                     <i><Icon icon='fa:star-o' /></i>
                                                                 </div>
                                                                 <div className="rating-progress">
-                                                                    <div style={{ width: "60%" }}></div>
+                                                                    <div id='progress-4' style={{ width: "60%" }} ></div>
                                                                 </div>
-                                                                <span className="sum">2</span>
+                                                                <span className="sum">{stars[1]}</span>
                                                             </li>
                                                             <li>
                                                                 <div className="rating-stars">
-                                                                    <i><Icon icon='fa:star' /></i>
-                                                                    <i><Icon icon='fa:star' /></i>
-                                                                    <i><Icon icon='fa:star' /></i>
+                                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
                                                                     <i><Icon icon='fa:star-o' /></i>
                                                                     <i><Icon icon='fa:star-o' /></i>
                                                                 </div>
                                                                 <div className="rating-progress">
-                                                                    <div></div>
+                                                                    <div id='progress-3' style={{ width: "60%" }} ></div>
                                                                 </div>
-                                                                <span className="sum">0</span>
+                                                                <span className="sum">{stars[2]}</span>
                                                             </li>
                                                             <li>
                                                                 <div className="rating-stars">
-                                                                    <i><Icon icon='fa:star' /></i>
-                                                                    <i><Icon icon='fa:star' /></i>
+                                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
                                                                     <i><Icon icon='fa:star-o' /></i>
                                                                     <i><Icon icon='fa:star-o' /></i>
                                                                     <i><Icon icon='fa:star-o' /></i>
                                                                 </div>
                                                                 <div className="rating-progress">
-                                                                    <div></div>
+                                                                    <div id='progress-2' style={{ width: "60%" }} ></div>
                                                                 </div>
-                                                                <span className="sum">0</span>
+                                                                <span className="sum">{stars[3]}</span>
                                                             </li>
                                                             <li>
                                                                 <div className="rating-stars">
 
-                                                                    <i><Icon icon='fa:star' /></i>
+                                                                    <i><Icon color="#D10024" icon='fa:star' /></i>
                                                                     <i><Icon icon='fa:star-o' /></i>
                                                                     <i><Icon icon='fa:star-o' /></i>
                                                                     <i><Icon icon='fa:star-o' /></i>
                                                                     <i><Icon icon='fa:star-o' /></i>
                                                                 </div>
                                                                 <div className="rating-progress">
-                                                                    <div></div>
+                                                                    <div id='progress-1' style={{ width: "60%" }} ></div>
                                                                 </div>
-                                                                <span className="sum">0</span>
+                                                                <span className="sum">{stars[4]}</span>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -358,87 +596,145 @@ export default function Product({ products }) {
                                                 <div className="col-md-6">
                                                     <div id="reviews">
                                                         <ul className="reviews">
-                                                            <li>
-                                                                <div className="review-heading">
-                                                                    <h5 className="name">John</h5>
-                                                                    <p className="date">27 DEC 2018, 8:0 PM</p>
-                                                                    <div className="review-rating">
-                                                                        <i><Icon icon='fa:star' /></i>
-                                                                        <i><Icon icon='fa:star-o' /></i>
-                                                                        <i><Icon icon='fa:star-o' /></i>
-                                                                        <i><Icon icon='fa:star-o' /></i>
-                                                                        <i className="empty"><Icon icon='fa:star-o' /></i>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="review-body">
-                                                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div className="review-heading">
-                                                                    <h5 className="name">John</h5>
-                                                                    <p className="date">27 DEC 2018, 8:0 PM</p>
-                                                                    <div className="review-rating">
-                                                                        <i><Icon icon='fa:star' /></i>
-                                                                        <i><Icon icon='fa:star' /></i>
-                                                                        <i><Icon icon='fa:star' /></i>
-                                                                        <i><Icon icon='fa:star' /></i>
-                                                                        <i><Icon icon='fa:star' /></i>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="review-body">
-                                                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div className="review-heading">
-                                                                    <h5 className="name">John</h5>
-                                                                    <p className="date">27 DEC 2018, 8:0 PM</p>
-                                                                    <div className="review-rating">
-                                                                        <i><Icon icon='fa:star' /></i>
-                                                                        <i><Icon icon='fa:star' /></i>
-                                                                        <i><Icon icon='fa:star' /></i>
-                                                                        <i><Icon icon='fa:star' /></i>
-                                                                        <i><Icon icon='fa:star' /></i>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="review-body">
-                                                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-                                                                </div>
-                                                            </li>
+                                                            {
+                                                                reviews.map(r => 
+                                                                    <li>
+                                                                        <div className="review-heading">
+                                                                            <h5 className="name">{r.userName}</h5>
+                                                                            <p className="date">{r.createdAt}</p>
+                                                                            <div className="review-rating">
+                                                                                {
+                                                                                    r.rate === 1 
+                                                                                        ?
+                                                                                        <>
+                                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                                            <i><Icon color="#D10024" icon='fa:star-o' /></i>
+                                                                                            <i><Icon color="#D10024" icon='fa:star-o' /></i>
+                                                                                            <i><Icon color="#D10024" icon='fa:star-o' /></i>
+                                                                                            <i><Icon color="#D10024" icon='fa:star-o' /></i>
+                                                                                        </>
+                                                                                        :
+                                                                                    r.rate === 2
+                                                                                        ?
+                                                                                        <>
+                                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                                            <i><Icon color="#D10024" icon='fa:star-o' /></i>
+                                                                                            <i><Icon color="#D10024" icon='fa:star-o' /></i>
+                                                                                            <i><Icon color="#D10024" icon='fa:star-o' /></i>
+                                                                                        </>
+                                                                                        :
+                                                                                    r.rate === 3
+                                                                                        ?
+                                                                                        <>
+                                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                                            <i><Icon color="#D10024" icon='fa:star-o' /></i>
+                                                                                            <i><Icon color="#D10024" icon='fa:star-o' /></i>
+                                                                                        </>
+                                                                                        :
+                                                                                    r.rate === 4
+                                                                                        ? 
+                                                                                        <>
+                                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                                            <i><Icon color="#D10024" icon='fa:star-o' /></i>
+                                                                                        </>
+                                                                                        :
+                                                                                        <>
+                                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                                            <i><Icon color="#D10024" icon='fa:star' /></i>
+                                                                                        </>
+                                                                                }
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="review-body">
+                                                                            <p>{r.reviewText}</p>
+                                                                        </div>
+                                                                    </li>    
+                                                                )
+                                                            }
                                                         </ul>
-                                                        <ul className="reviews-pagination">
+                                                        {/* <ul className="reviews-pagination">
                                                             <li className="active">1</li>
                                                             <li><a href="#">2</a></li>
                                                             <li><a href="#">3</a></li>
                                                             <li><a href="#">4</a></li>
                                                             <li><a href="#"><i className="fa fa-angle-right"></i></a></li>
-                                                        </ul>
+                                                        </ul> */}
                                                     </div>
                                                 </div>
 
                                                 <div className="col-md-3">
                                                     <div id="review-form">
                                                         <form className="review-form">
-                                                            <input className="input" type="text" placeholder="Your Name" />
-                                                            <input className="input" type="email" placeholder="Your Email" />
-                                                            <textarea className="input" placeholder="Your Review"></textarea>
+                                                            <textarea id='rating-textarea' className="input" placeholder="Your Review"></textarea>
                                                             <div className="input-rating">
                                                                 <span>Your Rating: </span>
-                                                                <div className="stars">
-                                                                    <input id="star5" name="rating" value="5" type="radio" /><label for="star5"></label>
-                                                                    <input id="star4" name="rating" value="4" type="radio" /><label for="star4"></label>
-                                                                    <input id="star3" name="rating" value="3" type="radio" /><label for="star3"></label>
-                                                                    <input id="star2" name="rating" value="2" type="radio" /><label for="star2"></label>
-                                                                    <input id="star1" name="rating" value="1" type="radio" /><label for="star1"></label>
+                                                                <div className="stars" style={{ cursor: 'pointer', marginLeft: '10px' }} onClick={handleRatingStars}>
+                                                                    {
+                                                                        rate === 1
+                                                                            ?
+                                                                            <>
+                                                                                <i  id='star-1'><Icon id='star-1' color="#D10024" icon='fa:star' /></i>
+                                                                                <i  id='star-2'><Icon id='star-2' color="#D10024" icon='fa:star-o' /></i>
+                                                                                <i  id="star-3"><Icon id="star-3" color="#D10024" icon='fa:star-o' /></i>
+                                                                                <i  id="star-4"><Icon id="star-4" color="#D10024" icon='fa:star-o' /></i>
+                                                                                <i  id="star-5"><Icon id="star-5" color="#D10024" icon='fa:star-o' /></i>
+                                                                            </>
+                                                                            : 
+                                                                        rate === 2 
+                                                                            ? 
+                                                                            <>
+                                                                                <i id='star-1'><Icon id='star-1' color="#D10024" icon='fa:star' /></i>
+                                                                                <i id='star-2'><Icon id='star-2' color="#D10024" icon='fa:star' /></i>
+                                                                                <i id="star-3"><Icon id="star-3" color="#D10024" icon='fa:star-o' /></i>
+                                                                                <i id="star-4"><Icon id="star-4" color="#D10024" icon='fa:star-o' /></i>
+                                                                                <i id="star-5"><Icon id="star-5" color="#D10024" icon='fa:star-o' /></i>
+                                                                            </>
+                                                                            :
+                                                                        rate === 3
+                                                                            ?
+                                                                            <>
+                                                                                <i id='star-1'><Icon id='star-1' color="#D10024" icon='fa:star' /></i>
+                                                                                <i id='star-2'><Icon id='star-2' color="#D10024" icon='fa:star' /></i>
+                                                                                <i id="star-3"><Icon id="star-3" color="#D10024" icon='fa:star' /></i>
+                                                                                <i id="star-4"><Icon id="star-4" color="#D10024" icon='fa:star-o' /></i>
+                                                                                <i id="star-5"><Icon id="star-5" color="#D10024" icon='fa:star-o' /></i>
+                                                                            </>
+                                                                            :
+                                                                        rate === 4
+                                                                            ?
+                                                                            <>
+                                                                                <i id='star-1'><Icon id='star-1' color="#D10024" icon='fa:star' /></i>
+                                                                                <i id='star-2'><Icon id='star-2' color="#D10024" icon='fa:star' /></i>
+                                                                                <i id="star-3"><Icon id="star-3" color="#D10024" icon='fa:star' /></i>
+                                                                                <i id="star-4"><Icon id="star-4" color="#D10024" icon='fa:star' /></i>
+                                                                                <i id="star-5"><Icon id="star-5" color="#D10024" icon='fa:star-o' /></i>
+                                                                            </>
+                                                                            :
+                                                                            <>
+                                                                                <i id='star-1'><Icon id='star-1' color="#D10024" icon='fa:star' /></i>
+                                                                                <i id='star-2'><Icon id='star-2' color="#D10024" icon='fa:star' /></i>
+                                                                                <i id="star-3"><Icon id="star-3" color="#D10024" icon='fa:star' /></i>
+                                                                                <i id="star-4"><Icon id="star-4" color="#D10024" icon='fa:star' /></i>
+                                                                                <i id="star-5"><Icon id="star-5" color="#D10024" icon='fa:star' /></i>
+                                                                            </>
+                                                                    }
                                                                 </div>
                                                             </div>
-                                                            <button className="primary-btn">Submit</button>
+                                                            <button className="primary-btn" onClick={handleSubmitRating}>Submit</button>
                                                         </form>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div> */}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
